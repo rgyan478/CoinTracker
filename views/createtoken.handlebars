@@ -1,0 +1,67 @@
+   <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Token</h3>
+            <div class="tile-body">
+              <form class="form-horizontal" method="POST" action="/createtoken">
+              <div class="form-group row">
+                  <label class="control-label col-md-3">TokenName</label>
+                  <div class="col-md-8">
+                   <select name="tokencode"  class="form-control col-md-8">
+                        {{#each data}}    
+                          <option value="{{tokencode}}">{{tokenname}}</option>
+                         {{/each}}
+                    </select>
+                  </div>
+                </div>
+             
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Currency</label>
+                  <div class="col-md-8">
+                    <input class="form-control col-md-8" type="text" placeholder="Currency Token" name="currency">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Min Value</label>
+                  <div class="col-md-8">
+                    <input class="form-control col-md-8" type="text" placeholder="Min Value" name="min">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Max Value</label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control col-md-8" rows="4" placeholder="Max Value" name="max"></textarea>
+                  </div>
+                </div>
+                {{!-- <div class="form-group row">
+                  <label class="control-label col-md-3">Current value</label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control col-md-8" rows="4" placeholder="" name="currentvalue"></textarea>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">lastvalues</label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control col-md-8" rows="4" placeholder="" name="lastvalue"></textarea>
+                  </div>
+                </div> --}}
+                <div class="tile-footer">
+                  <div class="row">
+                    <div class="col-md-8 col-md-offset-3">
+                      <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Add</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/"><i class="fa fa-fw fa-lg fa-check-circle"></i>Cancel</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-6">
+          {{#if errors}}
+              {{#each errors}}
+                  <div class="alert alert-danger">{{msg}}</div>
+              {{/each}}
+          {{/if}}
+        </div>
+    </div>

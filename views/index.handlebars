@@ -1,0 +1,22 @@
+<div class="row" style="float:right">
+    <a class="btn btn-secondar" href="/createtoken"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
+</div>
+
+<table class="table table-hover table-bordered" id="sampleTable">
+    <thead>
+        <tr>
+        <th>Currency</th>
+        <th>Min Value</th>
+        <th>Max Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}               
+        <tr>
+            <td> {{currency}} </td>
+            <td> {{min}} </td>
+            <td> {{max}} </td>                    
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
