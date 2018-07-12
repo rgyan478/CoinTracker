@@ -10,6 +10,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+var request=require('request');
 
 mongoose.connect('mongodb://localhost/CurrencyTracker');
 var db = mongoose.connection;
@@ -87,8 +88,39 @@ app.use('/', routes);
 app.use('/users', users);
 
 //cron
-cron.schedule('* * * * *', function(){
+// //6 star for running task every second and 5 star for running task every minutes
+cron.schedule('*/20 * * * * *', function(){
   console.log('running a task every minute');
+});
+
+//Get TokenCode 
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+MongoClient.connect(url, function(err, db) {
+ if (err) throw err;
+ var dbo = db.db("CurrencyTracker");
+ var array=[];
+  //var tokendata;
+ dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) {
+   if (err) throw err; 
+        for(var i=0;i<result.length;i++)
+         {          
+           array[i]=result[i].tokencode;
+          //console.log(tokencodes);
+         }        
+       console.log(array.length)
+        array.forEach(element => {          
+        console.log(element);      
+        });
+        //Get Api request
+        request('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=BTC,ETH,LTC,USD,EUR', (err, res, body) => {
+          if (err) { return console.log(err); }
+          var token=JSON.parse(body);
+            console.log(token.ETH);
+            //console.log(body.explanation);
+           });
+    db.close();
+ });
 });
 
 // Set Port

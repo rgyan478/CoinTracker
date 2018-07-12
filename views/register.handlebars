@@ -15,54 +15,57 @@
       <div class="cover"></div>
     </section>
     <section class="login-content">
-      <div class="login-box">
-
- <div class="tile">
-            <h3 class="tile-title">Register</h3>
-
-            <div class="tile-body">
-              <form class="form-horizontal" method="POST" action="/users/register">
+  
+ <div class="tile"  style="padding:20px 40px; margin: 20px 0px;">
+     <h3 class="tile-title" style="text-align: center; margin-bottom: 0px;">Register</h3>
+        <div class="tile-body">
+          <form class="form-horizontal" method="POST" action="/users/register">
+             <div class="form-group row">
+                <label class="control-label">Name</label>
+                  <input class="form-control" type="text" placeholder="Enter full name" autofocus name="name" required>
+              </div>
                 <div class="form-group row">
-                  <label class="control-label">Name</label>
-          <input class="form-control" type="text" placeholder="Enter full name" name="name">
-                
-                </div>
-                <div class="form-group row">
-                    <label class="control-label">User Name</label>
-                    <input class="form-control" type="text" placeholder="Enter User Name" autofocus name="username">
+                  <label class="control-label">User Name</label>
+                    <input class="form-control" type="text" placeholder="Enter User Name" required  name="username">
                 </div>
                 <div class="form-group row">
                   <label class="control-label">Email</label>
                   
-                    <input class="form-control" type="email" placeholder="Enter email address" name="email">
+                    <input class="form-control" type="email" placeholder="Enter email address" required  name="email">
                  
                 </div>
                 <div class="form-group row">
                     <label class="control-label">Password</label>
-                    <input class="form-control" type="password" placeholder="Password" name="password">
+                    <input class="form-control" type="password" placeholder="Password" required  name="password">
                 </div>
                 <div class="form-group row">
                     <label class="control-label">Confirm Password</label>
-                    <input class="form-control" type="password" placeholder="Password" name="password2">
+                    <input class="form-control" type="password" placeholder="Password" required name="password2">
                 </div>
-                <div class="tile-footer">
+                <div class="tile-footer" style="margin-left: 40px">
                     <div class="row">
                         <div>
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="login"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                         </div>
                     </div>
+                    <div class="row" >
+                     <a href="login"><u>Already registred! Login Me</u> </a>
+                    </div>
                 </div>
+    
               </form>
             </div>
 
           </div>
 
-            {{#if errors}}
+            {{!-- {{#if errors}}
                 {{#each errors}}
                     <div class="alert alert-danger">{{msg}}</div>
                 {{/each}}
-            {{/if}}
+            {{/if}} --}}
       </div>
+           
+ 
     </section>
     <!-- Essential javascripts for application to work-->
     <script src="/js/jquery-3.2.1.min.js"></script>
