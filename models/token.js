@@ -13,16 +13,16 @@ var TokenSchema = mongoose.Schema({
         index: true
     },
     min: {
-        type: String
+        type: Number
     },
     max:{
-        type: String
+        type: Number
     },
     currentvalue:{
-        type:String
+        type:Number
     },
     lastvalue:{
-        type:String
+        type:Number
     }
   
 });
@@ -32,3 +32,8 @@ var Token = module.exports = mongoose.model('Token', TokenSchema);
 module.exports.createToken = function(newToken, callback){
     newToken.save(callback);
 }
+
+module.exports.updateToken = function(conditionQuery, newValues, callback){
+   Token.updateMany(conditionQuery, newValues, callback);
+}
+

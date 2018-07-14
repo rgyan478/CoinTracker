@@ -21,14 +21,14 @@ router.get('/login', function (req, res) {
 
 // Register User
 router.post('/register', function (req, res) {
-	var name = req.body.name;
+	//var name = req.body.name;
 	var username=req.body.username;
 	var email=req.body.email;
 	var password=req.body.password;
 	var confirmpassword= req.body.password2;
 
 	//validation
-	req.checkBody('name', 'Name is required').notEmpty();
+	//req.checkBody('name', 'Name is required').notEmpty();
 	req.checkBody('username', 'Username is required').notEmpty();
 	req.checkBody('email', 'Email is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
@@ -44,7 +44,7 @@ router.post('/register', function (req, res) {
 	}
 	else{
 		var newUser = new User({
-			name: name,
+			//name: name,
 			email: email,
 			username: username,
 			password: password
@@ -68,6 +68,7 @@ passport.use(new LocalStrategy(function(username, password, done){
 		if(err) throw err;
 		if(!User){
 			return done(null, false, {message: 'Unknown User'});
+		
 		}
 
 		User.comparePassword(password, user.password, function(err, isMatch){
@@ -79,8 +80,10 @@ passport.use(new LocalStrategy(function(username, password, done){
 			}
 			else{
 				return done(null, false, {message: 'Invalid password'});
+				res.redirect('/users/login');
 			}
 		});
+		
 	})
 
 }));
@@ -102,8 +105,6 @@ router.post('/login',
 	function(req, res){
 		res.redirect('/');
 });
-
-
 router.get('/logout', function(req, res){
 	req.logOut();
 

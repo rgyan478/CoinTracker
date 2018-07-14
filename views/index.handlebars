@@ -5,15 +5,20 @@
 <table class="table table-hover table-bordered" id="sampleTable">
     <thead>
         <tr>
-        <th>Currency</th>
-        <th>Min Value</th>
-        <th>Max Value</th>
+        <th>Token Name</th>
+        <th>Currency Of Reference</th>
+         <th>Current Price</th>
+        <th>Min Price</th>
+        <th>Max Price</th>
+       
         </tr>
     </thead>
     <tbody>
         {{#each data}}               
         <tr>
-            <td> {{currency}} </td>
+            <td>{{tokencode}}</td>
+            <td> {{currency}} </td> 
+            <td>{{currentvalue}}</td>           
             <td> {{min}} </td>
             <td> {{max}} </td>                    
         </tr>

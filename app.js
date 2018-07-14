@@ -17,7 +17,7 @@ var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var Token = require('./models/token');
 // Init App
 var app = express();
 
@@ -81,48 +81,90 @@ app.use(function (req, res, next) {
   res.locals.user = req.user || null;
   next();
 });
-
-
-
 app.use('/', routes);
 app.use('/users', users);
 
 //cron
 // //6 star for running task every second and 5 star for running task every minutes
+var cron = require('node-cron');
+ //Start Cron-Every 20 sECOND
 cron.schedule('*/20 * * * * *', function(){
-  console.log('running a task every minute');
-});
+  console.log('Update currency value every 20 second.');
 
 //Get TokenCode 
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
+var data;
+var conditionQuery;
+var newValues;
+
 MongoClient.connect(url, function(err, db) {
  if (err) throw err;
  var dbo = db.db("CurrencyTracker");
- var array=[];
-  //var tokendata;
- dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) {
-   if (err) throw err; 
-        for(var i=0;i<result.length;i++)
-         {          
-           array[i]=result[i].tokencode;
-          //console.log(tokencodes);
-         }        
-       console.log(array.length)
-        array.forEach(element => {          
-        console.log(element);      
-        });
-        //Get Api request
-        request('https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=BTC,ETH,LTC,USD,EUR', (err, res, body) => {
-          if (err) { return console.log(err); }
-          var token=JSON.parse(body);
-            console.log(token.ETH);
-            //console.log(body.explanation);
-           });
+ var array=[]; 
+ dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
+ {
+    if (err) throw err; 
+   // console.log(result.currentvalue);
+    for(var i=0;i<result.length;i++)
+    {          
+      array[i]=result[i].tokencode;
+    //  console.log(result[i].currentvalue);
+    }    
+    //loop for get unique value from array
+    for(var i=0;i<result.length;i++)
+    {
+      for(var j=i+1;j<result.length;j++)
+      {
+        if(result[i].tokencode==result[j].tokencode)
+        {
+            delete result[j];
+        }
+        else
+        {
+              continue;
+        }
+      }
+    }
+
+    result.forEach(element => {    
+
+    //  console.log(element.tokencode);   
+     // console.log('-------------');   
+      var CurrencyValues;
+      request('https://min-api.cryptocompare.com/data/price?fsym=' + element.tokencode + '&tsyms=USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC',
+          { json: true }, 
+          (err, res, body) => 
+          {
+            if (err) { return console.log(err); }
+            var token = JSON.stringify(body);
+            CurrencyValues = JSON.parse(token);
+           // console.log(element.tokencode);  
+            for(var currencyItem in CurrencyValues)
+            {            
+               // console.log("key:"+currencyItem+", value:"+CurrencyValues[currencyItem]);
+                 conditionQuery = {_id: element._id, tokencode: element.tokencode, currency: currencyItem};
+                 newValues = { $set: { currentvalue: CurrencyValues[currencyItem],lastvalue:element.currentvalue  }};           
+               
+              Token.updateToken(conditionQuery, newValues, function(err, res) {
+                if (err) throw err;
+                console.log("1 document updated");
+              //  console.log(res);
+              });
+             // console.log(conditionQuery);
+             // console.log(newValues);
+             // console.log('-------code for------');   
+            
+            }                 
+          
+          }); 
+    });       
+    
     db.close();
  });
 });
-
+});//End Cron
 // Set Port
 app.set('port', (process.env.PORT || 3000));
 
