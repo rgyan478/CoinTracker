@@ -4,7 +4,8 @@
   "description": "currency tracker with authentication process",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-prebuild": "npm install",
+    "start":"node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -32,5 +33,9 @@
     "play-sound": "^1.1.2",
     "request": "^2.87.0",
     "trim": "0.0.1"
-  }
+  },
+  "engines": {
+    "node": "9.5.0",
+    "npm": "5.7.1"
+  } 
 }

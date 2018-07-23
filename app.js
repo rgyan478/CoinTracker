@@ -13,7 +13,8 @@ var request=require('request');
 var player = require('play-sound')();
 
 
-mongoose.connect('mongodb://localhost/CurrencyTracker');
+//mongoose.connect('mongodb://localhost/CurrencyTracker');
+mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
@@ -111,14 +112,15 @@ cron.schedule('*/15 * * * * *', function(){
 // })
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+//var url = "mongodb://localhost:27017/";
+var url = "mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker";
 var data;
 var conditionQuery;
 var newValues;
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
- var dbo = db.db("CurrencyTracker");
+ var dbo = db.db("currencytracker");
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
@@ -202,6 +204,6 @@ MongoClient.connect(url, function(err, db) {
 app.set('port', (process.env.PORT || 3000));
 
 app.listen(app.get('port'), function(){
-	console.log('Server started on port '+app.get('port'));
+	console.log('Server started on port '+ app.get('port'));
 });
 
