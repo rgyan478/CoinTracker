@@ -11,3 +11,19 @@ var TokenSchema = mongoose.Schema({
   
 });
 var CToken = module.exports = mongoose.model('tokenlist', TokenSchema);
+
+//Find Tokenlist Tokename
+ module.exports.FindTokenlistname=function(conditionQuery,callback)
+ {
+    CToken.find(conditionQuery,callback)
+ }
+
+ //Delete User Details By Id
+module.exports.deleteToken=function(conditionDeleteQuery,callback){
+    CToken.deleteOne(conditionDeleteQuery,callback)
+ }
+
+ //Find User Deatils By Id
+module.exports.FindByIdToken=function(conditionDeleteQuery,callback){
+    CToken.findOne(conditionDeleteQuery,callback)
+ }

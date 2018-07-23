@@ -8,9 +8,10 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var mongo = require('mongodb');
-var mongoose = require('mongoose');
+var mongoose = require('mongoose');                 
 var request=require('request');
+var player = require('play-sound')();
+
 
 mongoose.connect('mongodb://localhost/CurrencyTracker');
 var db = mongoose.connection;
@@ -52,6 +53,8 @@ app.get('*', function(req, res, next){
   res.locals.user = req.user || null;
   next();
 });
+
+
 // Express Validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
@@ -79,19 +82,33 @@ app.use(function (req, res, next) {
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
+ 
+  
+  //  Create an Predefiend array of CurrencyList
+  res.locals.currencylistarray=["USD","BIT","EUR","ETH","LTC","BTC","ZRX","AEON","ADX","ADT","ARN","AE","AIX","AST","BEE","BBT","BNB","IOT","HT","ENJ","EOS"]; 
+
   next();
 });
 app.use('/', routes);
-app.use('/users', users);
+app.use('/users', users); 
+
+
+
 
 //cron
 // //6 star for running task every second and 5 star for running task every minutes
 var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
-cron.schedule('*/20 * * * * *', function(){
+cron.schedule('*/15 * * * * *', function(){
   console.log('Update currency value every 20 second.');
-
+  
 //Get TokenCode 
+
+//play sound.....
+// player.play('./sound/mps.mp3', function(err){
+//   if (err) throw err
+//   console.log("Audio finished");
+// })
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -105,19 +122,20 @@ MongoClient.connect(url, function(err, db) {
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
-    if (err) throw err; 
-   // console.log(result.currentvalue);
-    for(var i=0;i<result.length;i++)
-    {          
-      array[i]=result[i].tokencode;
+   
+    if (err) throw err;   
+    
+    // for(var i=0;i<result.length;i++)
+    // {       
     //  console.log(result[i].currentvalue);
-    }    
+    
+    // }    
     //loop for get unique value from array
-    for(var i=0;i<result.length;i++)
+    for(var i=0;i<=result.length;i++)
     {
-      for(var j=i+1;j<result.length;j++)
+    for(var j=i+1;j<=result.length;j++)
       {
-        if(result[i].tokencode==result[j].tokencode)
+        if(result[i]==result[j])
         {
             delete result[j];
         }
@@ -127,35 +145,50 @@ MongoClient.connect(url, function(err, db) {
         }
       }
     }
+   
+    result.forEach(element => {  
 
-    result.forEach(element => {    
-
-    //  console.log(element.tokencode);   
-     // console.log('-------------');   
       var CurrencyValues;
+      //console.log("color",result.colorclass);
+      //Get max value
+      var tokenmax=element.max;
+     
       request('https://min-api.cryptocompare.com/data/price?fsym=' + element.tokencode + '&tsyms=USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC',
           { json: true }, 
           (err, res, body) => 
           {
             if (err) { return console.log(err); }
             var token = JSON.stringify(body);
-            CurrencyValues = JSON.parse(token);
-           // console.log(element.tokencode);  
+            CurrencyValues = JSON.parse(token);          
             for(var currencyItem in CurrencyValues)
-            {            
-               // console.log("key:"+currencyItem+", value:"+CurrencyValues[currencyItem]);
-                 conditionQuery = {_id: element._id, tokencode: element.tokencode, currency: currencyItem};
-                 newValues = { $set: { currentvalue: CurrencyValues[currencyItem],lastvalue:element.currentvalue  }};           
+            {       
+              console.log("total max:", CurrencyValues[currencyItem]);   
+              var green="green";
+              var red="red";
+              var black="black";
+              //console.log("chekc",CurrencyValues[currencyItem])
+                conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
+               if(tokenmax < CurrencyValues[currencyItem] )
+               {
+                newValues = { $set: { currentvalue:CurrencyValues[currencyItem],lastvalue:element.currentvalue,colorclass:green  }}; 
+               }  
+              else if(tokenmax > CurrencyValues[currencyItem]  )    
+              {
                
+                newValues = { $set: { currentvalue: CurrencyValues[currencyItem],lastvalue:element.currentvalue,colorclass:red  }};           
+              }
+                  
+            else 
+             {
+              console.log("test111111");
+               newValues = { $set: { currentvalue: CurrencyValues[currencyItem],lastvalue:element.currentvalue,colorclass:black  }};           
+             }
               Token.updateToken(conditionQuery, newValues, function(err, res) {
                 if (err) throw err;
-                console.log("1 document updated");
-              //  console.log(res);
+               // console.log("Currency  updated");
+        
               });
-             // console.log(conditionQuery);
-             // console.log(newValues);
-             // console.log('-------code for------');   
-            
+           
             }                 
           
           }); 
@@ -163,7 +196,7 @@ MongoClient.connect(url, function(err, db) {
     
     db.close();
  });
-});
+});//End Connection
 });//End Cron
 // Set Port
 app.set('port', (process.env.PORT || 3000));

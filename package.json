@@ -4,11 +4,12 @@
   "description": "currency tracker with authentication process",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "alert-node": "^1.2.1",
     "bcryptjs": "*",
     "body-parser": "*",
     "connect-flash": "*",
@@ -19,6 +20,7 @@
     "express-messages": "*",
     "express-session": "*",
     "express-validator": "*",
+    "js-alert": "^1.0.4",
     "mongodb": "*",
     "mongoose": "*",
     "mongoose-unique-validator": "^2.0.1",
@@ -26,6 +28,9 @@
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
-    "request": "^2.87.0"
+    "passport-remember-me": "0.0.1",
+    "play-sound": "^1.1.2",
+    "request": "^2.87.0",
+    "trim": "0.0.1"
   }
 }

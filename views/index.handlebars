@@ -1,27 +1,48 @@
 <div class="row" style="float:right">
+    {{!-- <a  href="/index"><img src="images/Refresh.png" style="height: 30px;margin-top: 5px;margin-right: 10px;"/></a> --}}
+    <button id="btnimg" style="border:none; background-color:white;" value="Referesh Page" onclick="window.location.reload()">  <img id="img" src="images/Refresh.png" style="height: 30px;margin-top: 5px;margin-right: 10px;"/></button>
     <a class="btn btn-secondar" href="/createtoken"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
 </div>
 
-<table class="table table-hover table-bordered" id="sampleTable">
+<table class="table table-hover table-bordered" id="tokenId">
     <thead>
         <tr>
+           
         <th>Token Name</th>
         <th>Currency Of Reference</th>
          <th>Current Price</th>
         <th>Min Price</th>
         <th>Max Price</th>
+        <th>Action</th>
        
         </tr>
     </thead>
     <tbody>
         {{#each data}}               
-        <tr>
-            <td>{{tokencode}}</td>
-            <td> {{currency}} </td> 
-            <td>{{currentvalue}}</td>           
-            <td> {{min}} </td>
-            <td> {{max}} </td>                    
+        <tr class="trdata">
+           
+            <td class="{{colorclass}}">{{tokencode}}</td>
+            <td class="{{colorclass}}"> {{currency}} </td> 
+            <td class="{{colorclass}}">{{currentvalue}}</td>           
+            <td class="{{colorclass}}"> {{min}} </td>
+            <td class="{{colorclass}}"> {{max}} </td>    
+              <td>
+                  <a href='/edit/{{_id}}'><img src="images/edit.png" style="height:22px" /></a> ||
+               <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><img src="images/delete.png" style="height:22px" /></a>
+            </td>                  
         </tr>
         {{/each}}
      </tbody>
+      
 </table>
+<script type='text/javascript'>
+setTimeout("location.reload();",15000);
+</script>
+</script>
+<style> 
+  .green{background-color:green;} 
+  .red{background-color:red;}
+  .black{background-color:black;} 
+  .trdata{color: white}
+  .tbcolor{background-color: grey;}
+</style>

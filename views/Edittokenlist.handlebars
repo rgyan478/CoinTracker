@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form id="form1" action="/edit" method="POST">
+    <div class="row" style="float:right">
+    <a class="btn btn-secondar" href="#"><i class="fa fa-fw fa-lg fa-circle"></i>Cancle</a>
+</div>
+    <table class="table table-hover table-bordered" >
+    <thead>
+        <tr>
+      
+        <th>Token Name</th>
+        <th>Token code</th>
+       
+       
+        </tr>
+    </thead>
+   
+         
+       <tbody>    
+ 
+         <td><input type="text" name="tokencode" value="{{data.tokenname}}"></td>
+          <td><input type="text" name="currency"  value="{{data.tokencode}}"></td>
+           
+        
+     </tbody>
+     
+     <input type="hidden" name="id" value="{{data._id}}">
+     
+    
+</table>
+    </form>
+</body>
+</html>

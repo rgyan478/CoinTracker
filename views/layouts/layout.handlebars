@@ -26,7 +26,9 @@
 
     {{#if user}}
       <!-- Navbar-->
-      <header class="app-header"><a class="app-header__logo" href="/">CurrencyTracker</a>
+      <header class="app-header">
+        {{!-- <a class="app-header__logo" href="/">CryptoMoonTracker</a> --}}
+        <img alt="" src="images/crypto_moon_tracker_logo.png" style="    height: 18px; margin-top: 14px"/>
         <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
@@ -88,14 +90,16 @@
       <aside class="app-sidebar">
         <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="https://cdn1.iconfinder.com/data/icons/user-pictures/100/male3-48.png" alt="User Image">
           <div>
-            <p class="app-sidebar__user-name">  {{#each user}} {{username}} {{/each}} </p>
+            <p class="app-sidebar__user-name">   {{user.username}} </p>
             {{!-- <p class="app-sidebar__user-designation">Software Engineer</p> --}}
           </div>
         </div>
         <ul class="app-menu">
           <li><a class="app-menu__item" href="/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
-          <li><a class="app-menu__item" href="/createtokenlist"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Add New TokenList</span></a></li>
-        
+          {{# if user.isAdmin}}
+            <li><a id="admintokenview" class="app-menu__item" href="/admintokenview"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">View TokenList</span></a></li>
+            <li><a id="createtokenlist" class="app-menu__item" href="/createtokenlist"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Add New TokenList</span></a></li>
+          {{/if}}
         </ul>
       </aside>
     

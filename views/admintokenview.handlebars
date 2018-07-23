@@ -1,0 +1,33 @@
+<div class="row" style="float:right">
+    <a class="btn btn-secondar" href="/createtokenlist"><i class="fa fa-fw fa-lg fa-circle"></i>Add New TokenList</a>
+</div>
+<form id="form1" action="/update" method="POST">
+
+<table class="table table-hover table-bordered" id="sampleTable">
+    <input type="hidden"  name='id'  value=' {{#each data}}  {{_id}}  {{/each}}'>
+    <thead>
+        <tr>
+          
+        <th>Token Code</th>
+        <th>Token Name</th>
+        <th>Action</th>        
+               </tr>
+    </thead>
+    <tbody>
+        {{#each data}}               
+        <tr>
+            
+            <td>{{tokencode}}</td>
+            <td>{{tokenname}} </td> 
+            
+            <td>
+                 <a href='Edittokenlist/:id'><img src="images/edit.png" style="height:22px" /></a> ||
+               <a href='/deleted/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><img src="images/delete.png" style="height:22px" /></a>
+            </td>  
+                                
+        </tr>
+        {{/each}}
+     </tbody>
+     
+</table>
+</form>

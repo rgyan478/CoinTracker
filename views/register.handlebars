@@ -19,7 +19,7 @@
  <div class="tile"  style="padding:20px 40px; margin: 20px 0px;">
      <h3 class="tile-title" style="text-align: center; margin-bottom: 0px;">Register</h3>
         <div class="tile-body">
-          <form class="form-horizontal" method="POST" action="/users/register">
+          <form class="form-horizontal" method="POST" action="/users/register" onSubmit="return validateEmail()" name="form1">
              {{!-- <div class="form-group row">
                 <label class="control-label">Name</label>
                   <input class="form-control" type="text" placeholder="Enter full name" autofocus name="name" required>
@@ -29,9 +29,9 @@
                     <input class="form-control" type="text" placeholder="Enter User Name" required  name="username">
                 </div>
                 <div class="form-group row">
-                  <label class="control-label">Email</label>
+                  <label class="control-label" id="Email">Email</label>
                   
-                    <input class="form-control" type="email" placeholder="Enter email address" required  name="email">
+                    <input class="form-control" type="email"   placeholder="Enter email address"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{1,3}$"  required  name="email">
                  
                 </div>
                 <div class="form-group row">
@@ -45,7 +45,7 @@
                 <div class="tile-footer" style="margin-left: 40px">
                     <div class="row">
                         <div>
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="login"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                            <button class="btn btn-primary"  onclick="myFunction()" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="login"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
                         </div>
                     </div>
                     <div class="row" >
@@ -81,5 +81,17 @@
       	return false;
       });
     </script>
+   <script>
+<script>
+        function validateEmail(){
+            var email = document.forms["form1"]["Email"].value;
+            var regex = /^([0-9a-zA-Z]([-_\\.]*[0-9a-zA-Z]+)*)@([0-9a-zA-Z]([-_\\.]*[0-9a-zA-Z]+)*)[\\.]([a-zA-Z]{2,9})$/;
+
+            if(!regex.test(email)){
+                alert("Enter a valid email");
+                return false;
+                }
+        }       
+</script>
   </body>
 </html>

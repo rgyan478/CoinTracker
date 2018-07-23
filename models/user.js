@@ -12,6 +12,9 @@ var UserSchema = mongoose.Schema({
     },
     email:{
         type: String
+    },
+    isAdmin:{
+        type:Boolean
     }
    
 });
@@ -31,7 +34,10 @@ module.exports.getUserByUsername = function(username, callback){
     var query= {username: username};
     User.findOne(query, callback);
 }
-
+module.exports.getisAdmin = function(isAdmin, callback){
+    var query= {isAdmin: isAdmin};
+    User.findOne(query, callback);
+}
 module.exports.getUserById = function(id, callback){
        User.findById(id, callback);
 }
