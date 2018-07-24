@@ -124,7 +124,7 @@ var newValues;
 
 MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
- var dbo = db.db("CurrencyTracker");
+ var dbo = db.db("currencytracker");
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
