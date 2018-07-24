@@ -1,46 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <form id="form1" action="/edit" method="POST">
-    <div class="row" style="float:right">
-    <a class="btn btn-secondar" href="/"><i class="fa fa-fw fa-lg fa-circle"></i>Cancle</a>
-</div>
-    <table class="table table-hover table-bordered" >
-    <thead>
-        <tr>
-      
-        <th>Token Name</th>
-        <th>Currency Of Reference</th>
-         <th>Current Price</th>
-        <th>Min Price</th>
-        <th>Max Price</th>
-        <th>Action</th>
-       
-        </tr>
-    </thead>
-   
-         
-       <tbody>    
- 
-         <td><input type="text" name="tokencode" value="{{data.tokencode}}"></td>
-          <td><input type="text" name="currency"  value="{{data.currency}}"></td>
-           <td><input type="text" name="currentvalue"  value="{{data.currentvalue}}"></td>
-            <td><input type="text" name="min"   value="{{data.min}}"></td>
-            <td><input type="text" name="max"   value="{{data.max}}"></td>
-            <td><input type="submit" name="submit" value="Update"></td>
-        
-     </tbody>
-     
-     <input type="hidden" name="id" value="{{data._id}}">
-     
-    
-</table>
-    </form>
-</body>
-</html>
+   <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Token</h3>
+            <div class="tile-body">
+              <form class="form-horizontal" method="POST" action="/edit">
+              <div class="form-group row">
+             
+                  <label class="control-label col-md-3">TokenName</label>
+                  <div class="col-md-7">
+                   {{!-- <select name="tokencode"  class="form-control col-md-8" id="drptokencode" onchange="getTokenListName()"> --}}
+                       <select name="tokencode"  class="form-control col-md-8" >                        
+                          <option value="{{data.tokencode}}">{{data.tokencode}}</option>                       
+                         
+                    </select>
+                  </div>
+                 {{!-- <p class="control-label col-md-2" id="p"></p> --}}
+                </div>              
+
+          
+             <div class="form-group row">
+                  <label class="control-label col-md-3">Currency</label>
+                  <div class="col-md-7">
+                   <select name="currency"  class="form-control col-md-8">
+                         
+                          <option value="{{data.currency}}">{{data.currency}}</option>
+                          
+                         
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Min Value</label>
+                  <div class="col-md-7">
+                    <input class="form-control col-md-8" type="text"  onkeypress="return isNumberKey(event)" value="{{data.min}}" name="min" required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Max Value</label>
+                  <div class="col-md-7">
+                    <input type="text" class="form-control col-md-8" rows="4"  onkeypress="return isNumberKey(event)" value="{{data.max}}" name="max" required></textarea>
+                  </div>
+                </div>
+                <div class="tile-footer">
+                  <div class="row">
+                    <div class="col-md-8 col-md-offset-3">
+                      <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/"><i class="fa fa-fw fa-lg fa-check-circle"></i>Cancel</a>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                    <input type="hidden" name="id" value="{{data._id}}">
+        <input type="text" name="currentvalue" value="{{data.currentvalue}}">
+                </div>
+                <div class="tile-footer">
+                  <div class="row">
+                    <div class="col-md-8 col-md-offset-3">
+                        {{#each message}}
+                    {{message}}
+                    {{/each}}
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-6">
+          {{#if errors}}
+              {{#each errors}}
+                  <div class="alert alert-danger">{{msg}}</div>
+              {{/each}}
+          {{/if}}
+           
+        </div>
+        {{!-- *****Javascript number validation******* --}}
+       <script type="text/javascript">
+       function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : evt.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+       </script>

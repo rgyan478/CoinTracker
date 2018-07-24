@@ -4,22 +4,24 @@
     <a class="btn btn-secondar" href="/createtoken"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
 </div>
 
-<table class="table table-hover table-bordered" id="tokenId">
+<table class="table table-hover table-bordered" id="sampleTable1" >
+    <br>
     <thead>
-        <tr>
+        <tr  style="text-align:center;">
            
         <th>Token Name</th>
         <th>Currency Of Reference</th>
          <th>Current Price</th>
         <th>Min Price</th>
         <th>Max Price</th>
-        <th>Action</th>
+        <th>Action</th>               
+        
        
         </tr>
     </thead>
     <tbody>
         {{#each data}}               
-        <tr class="trdata">
+        <tr class="trdata" style="text-align:center;">
            
             <td class="{{colorclass}}">{{tokencode}}</td>
             <td class="{{colorclass}}"> {{currency}} </td> 
@@ -29,7 +31,10 @@
               <td>
                   <a href='/edit/{{_id}}'><img src="images/edit.png" style="height:22px" /></a> ||
                <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><img src="images/delete.png" style="height:22px" /></a>
-            </td>                  
+        
+            ||
+                <a href="#"><img src="images/sound.png" style="height:22px;"/></a>
+            </td>                 
         </tr>
         {{/each}}
      </tbody>
@@ -37,6 +42,7 @@
 </table>
 <script type='text/javascript'>
 setTimeout("location.reload();",15000);
+
 </script>
 </script>
 <style> 

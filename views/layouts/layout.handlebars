@@ -88,7 +88,7 @@
       <!-- Sidebar menu-->
       <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
       <aside class="app-sidebar">
-        <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="https://cdn1.iconfinder.com/data/icons/user-pictures/100/male3-48.png" alt="User Image">
+        <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="#" alt="">
           <div>
             <p class="app-sidebar__user-name">   {{user.username}} </p>
             {{!-- <p class="app-sidebar__user-designation">Software Engineer</p> --}}
@@ -96,7 +96,7 @@
         </div>
         <ul class="app-menu">
           <li><a class="app-menu__item" href="/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
-          {{# if user.isAdmin}}
+          {{#if user.isAdmin}}
             <li><a id="admintokenview" class="app-menu__item" href="/admintokenview"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">View TokenList</span></a></li>
             <li><a id="createtokenlist" class="app-menu__item" href="/createtokenlist"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Add New TokenList</span></a></li>
           {{/if}}
@@ -108,8 +108,6 @@
           <div class="col-md-12">
             <div class="tile">
               <div class="tile-body">
-
-
                 {{{body}}}
               </div>
             </div>

@@ -27,3 +27,7 @@ module.exports.deleteToken=function(conditionDeleteQuery,callback){
 module.exports.FindByIdToken=function(conditionDeleteQuery,callback){
     CToken.findOne(conditionDeleteQuery,callback)
  }
+ module.exports.updateTokenbyId = function(conditionQuerys, newValues, callback){
+    CToken.updateMany(conditionQuerys, newValues, callback);
+ }
+ 

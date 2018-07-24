@@ -13,13 +13,13 @@ var request=require('request');
 var player = require('play-sound')();
 
 
-//mongoose.connect('mongodb://localhost/CurrencyTracker');
 mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var Token = require('./models/token');
+var Utility = require('./models/utility');
 // Init App
 var app = express();
 
@@ -52,6 +52,9 @@ app.use(passport.session());
 //Login UserName show
 app.get('*', function(req, res, next){
   res.locals.user = req.user || null;
+  var na=req.user
+  res.cookie('mycookie',res.locals.user);
+  console.log("gfhfhfjgfjghjghj",res.locals.user);
   next();
 });
 
@@ -102,8 +105,9 @@ var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
 cron.schedule('*/15 * * * * *', function(){
   console.log('Update currency value every 20 second.');
-  
-//Get TokenCode 
+
+
+
 
 //play sound.....
 // player.play('./sound/mps.mp3', function(err){
@@ -120,18 +124,13 @@ var newValues;
 
 MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
- var dbo = db.db("currencytracker");
+ var dbo = db.db("CurrencyTracker");
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
    
     if (err) throw err;   
-    
-    // for(var i=0;i<result.length;i++)
-    // {       
-    //  console.log(result[i].currentvalue);
-    
-    // }    
+      
     //loop for get unique value from array
     for(var i=0;i<=result.length;i++)
     {
@@ -154,46 +153,53 @@ MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
       //console.log("color",result.colorclass);
       //Get max value
       var tokenmax=element.max;
-     
-      request('https://min-api.cryptocompare.com/data/price?fsym=' + element.tokencode + '&tsyms=USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC',
-          { json: true }, 
-          (err, res, body) => 
-          {
-            if (err) { return console.log(err); }
-            var token = JSON.stringify(body);
-            CurrencyValues = JSON.parse(token);          
-            for(var currencyItem in CurrencyValues)
-            {       
-              console.log("total max:", CurrencyValues[currencyItem]);   
-              var green="green";
-              var red="red";
-              var black="black";
-              //console.log("chekc",CurrencyValues[currencyItem])
-                conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
-               if(tokenmax < CurrencyValues[currencyItem] )
-               {
-                newValues = { $set: { currentvalue:CurrencyValues[currencyItem],lastvalue:element.currentvalue,colorclass:green  }}; 
-               }  
-              else if(tokenmax > CurrencyValues[currencyItem]  )    
-              {
-               
-                newValues = { $set: { currentvalue: CurrencyValues[currencyItem],lastvalue:element.currentvalue,colorclass:red  }};           
-              }
-                  
-            else 
-             {
-              console.log("test111111");
-               newValues = { $set: { currentvalue: CurrencyValues[currencyItem],lastvalue:element.currentvalue,colorclass:black  }};           
-             }
-              Token.updateToken(conditionQuery, newValues, function(err, res) {
-                if (err) throw err;
-               // console.log("Currency  updated");
+      var tokenmin=element.min;
+      Utility.getCurrentPriceByAPI(element.tokencode, 'USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,BNB,BEE,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC', function(currentValues){
         
-              });
+        for(var currencyItem in currentValues)
+        {       
+          //console.log("chekc",currentValues[currencyItem])
+          conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
+          //Get Color 
+          var currentPrice=currentValues[currencyItem];
+          var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
+          //console.log(color);       
+          newValues = { $set: { currentvalue:currentPrice,lastvalue:element.currentvalue,colorclass:color}}; 
+
+          Token.updateToken(conditionQuery, newValues, function(err, res) {
+            if (err) throw err;
+            // console.log("Currency  updated");
+    
+          });
+        
+        } 
+      });
+      // request('https://min-api.cryptocompare.com/data/price?fsym=' + element.tokencode + '&tsyms=USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,BNB,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC',
+      //     { json: true }, 
+      //     (err, res, body) => 
+      //     {
+      //       if (err) { return console.log(err); }
+      //       var token = JSON.stringify(body);
+      //       CurrencyValues = JSON.parse(token);          
+      //       for(var currencyItem in CurrencyValues)
+      //       {       
+      //         //console.log("chekc",CurrencyValues[currencyItem])
+      //         conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
+      //         //Get Color 
+      //         var currentPrice=CurrencyValues[currencyItem];
+      //         var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
+      //         //console.log(color);       
+      //         newValues = { $set: { currentvalue:currentPrice,lastvalue:element.currentvalue,colorclass:color}}; 
+
+      //         Token.updateToken(conditionQuery, newValues, function(err, res) {
+      //           if (err) throw err;
+      //          // console.log("Currency  updated");
+        
+      //         });
            
-            }                 
+      //       }                 
           
-          }); 
+      //     }); 
     });       
     
     db.close();
@@ -204,6 +210,7 @@ MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
 app.set('port', (process.env.PORT || 3000));
 
 app.listen(app.get('port'), function(){
-	console.log('Server started on port '+ app.get('port'));
+	console.log('Server started on port '+app.get('port'));
 });
+
 

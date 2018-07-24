@@ -1,40 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <form id="form1" action="/edit" method="POST">
-    <div class="row" style="float:right">
-    <a class="btn btn-secondar" href="#"><i class="fa fa-fw fa-lg fa-circle"></i>Cancle</a>
-</div>
-    <table class="table table-hover table-bordered" >
-    <thead>
-        <tr>
-      
-        <th>Token Name</th>
-        <th>Token code</th>
-       
-       
-        </tr>
-    </thead>
-   
-         
-       <tbody>    
- 
-         <td><input type="text" name="tokencode" value="{{data.tokenname}}"></td>
-          <td><input type="text" name="currency"  value="{{data.tokencode}}"></td>
-           
-        
-     </tbody>
-     
-     <input type="hidden" name="id" value="{{data._id}}">
-     
-    
-</table>
-    </form>
-</body>
-</html>
+   <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Token List</h3>
+            <div class="tile-body">
+              <form class="form-horizontal" method="POST" action="/updatetokenlist">
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Token Code</label>
+                  <div class="col-md-8">
+                    <input class="form-control col-md-8" type="text" placeholder="Token Code" value="{{data.tokencode}}" name="tokencode" required>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Token Name</label>
+                  <div class="col-md-8">
+                    <input class="form-control col-md-8" type="text" placeholder="Token Name" value="{{data.tokenname}}" name="tokenname" required>
+                  </div>
+                </div>
+               
+                </div>
+                <div> <input type="hidden" name="id" value="{{data._id}}">
+     </div>
+                <div class="tile-footer">
+                  <div class="row">
+                    <div class="col-md-8 col-md-offset-3">
+                      <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/admintokenview"><i class="fa fa-fw fa-lg fa-check-circle"></i>Cancel</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-md-6">
+          {{!-- {{#if errors}}
+              {{#each errors}}
+                  <div class="alert alert-danger">{{msg}}</div>
+              {{/each}}
+          {{/if}} --}}
+        </div>
+    </div>

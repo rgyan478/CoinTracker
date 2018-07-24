@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-
 var User = require('../models/user');
 
 // Register
@@ -11,9 +9,14 @@ router.get('/register', function (req, res) {
 	res.render('register');
 });
 
+
+
 // 
 // Login
 router.get('/login', function (req, res) {
+
+console.log("hii welcome",req.cookies);/******** */
+
 	if(!req.isAuthenticated())
 		res.render('login');
 	else
@@ -68,11 +71,13 @@ var http = require("http");
 
 passport.use(new LocalStrategy(function(username, password, done){
 	User.getUserByUsername(username, function(err, user){
-		if(err) throw err;
-		
-		if(!User){
+		if(err) {
+			//throw err;
+			return done(null, false, {message: 'Error:'+err});
+		}
+
+		if(!user){
 			return done(null, false, {message: 'Unknown User'});
-		
 		}
 
 		User.comparePassword(password, user.password, function(err, isMatch){
