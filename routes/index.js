@@ -101,6 +101,7 @@ router.post('/createtoken', function (req, res) {
         }
         else
         {
+          
           Token.createToken(newToken, function(err, token){
             if(err) throw err;
             console.log(token);
@@ -133,7 +134,7 @@ router.post('/createtokenlist', function(req, res){
           
        });
        //Find Token code and token name 
-       CToken.FindTokencode({tokencode:tokencode,tokenname:tokenname},function(err,tokencodes)
+       CToken.FindTokencode({tokencode:tokencode},function(err,tokencodes)
        {  
          if(err) throw err;        
          if(tokencodes.length > 0)
