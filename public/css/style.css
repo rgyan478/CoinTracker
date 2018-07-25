@@ -13503,6 +13503,7 @@ be a descendant of the grid when it is being dragged.
 
 @media (min-width: 768px) {
   .app-content {
+    background-color:darkgray;
     margin-left: 230px;
   }
 }

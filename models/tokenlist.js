@@ -30,4 +30,8 @@ module.exports.FindByIdToken=function(conditionDeleteQuery,callback){
  module.exports.updateTokenbyId = function(conditionQuerys, newValues, callback){
     CToken.updateMany(conditionQuerys, newValues, callback);
  }
+ //Find tokencode
+ module.exports.FindTokencode=function(conditionQuerys,callback){
+    CToken.find(conditionQuerys,callback)
+ }
  

@@ -71,16 +71,19 @@ var http = require("http");
 
 passport.use(new LocalStrategy(function(username, password, done){
 	User.getUserByUsername(username, function(err, user){
-		if(err) {
+		if(err) 
+		{
 			//throw err;
 			return done(null, false, {message: 'Error:'+err});
 		}
 
-		if(!user){
+		if(!user)
+		{
 			return done(null, false, {message: 'Unknown User'});
 		}
 
-		User.comparePassword(password, user.password, function(err, isMatch){
+		User.comparePassword(password, user.password, function(err, isMatch)
+		{
 			if(err) throw err;
 			if(isMatch)
 			{	
@@ -99,13 +102,16 @@ passport.use(new LocalStrategy(function(username, password, done){
 
 }));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function(user, done) 
+{
 	done(null, user.id);
 	//console.log(user.id);
-  });
+ });
   
-  passport.deserializeUser(function(id, done) {
-	User.getUserById(id, function(err, user) {
+  passport.deserializeUser(function(id, done) 
+  {
+	User.getUserById(id, function(err, user) 
+	{
 	  done(err, user);
 	  //console.log('Name',user)
 	});

@@ -12,7 +12,9 @@ var mongoose = require('mongoose');
 var request=require('request');
 var player = require('play-sound')();
 
-
+//mongoose.connect('mongodb://localhost/CurrencyTracker');
+//var db = mongoose.connection;
+//server connection
 mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
 var db = mongoose.connection;
 
@@ -51,10 +53,7 @@ app.use(passport.session());
 
 //Login UserName show
 app.get('*', function(req, res, next){
-  res.locals.user = req.user || null;
-  var na=req.user
-  res.cookie('mycookie',res.locals.user);
-  console.log("gfhfhfjgfjghjghj",res.locals.user);
+  res.locals.user = req.user || null; 
   next();
 });
 
@@ -105,10 +104,6 @@ var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
 cron.schedule('*/15 * * * * *', function(){
   console.log('Update currency value every 20 second.');
-
-
-
-
 //play sound.....
 // player.play('./sound/mps.mp3', function(err){
 //   if (err) throw err
@@ -117,7 +112,7 @@ cron.schedule('*/15 * * * * *', function(){
 
 var MongoClient = require('mongodb').MongoClient;
 //var url = "mongodb://localhost:27017/";
-var url = "mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker";
+var url = "mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker";//server connection
 var data;
 var conditionQuery;
 var newValues;
@@ -174,32 +169,7 @@ MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
         
         } 
       });
-      // request('https://min-api.cryptocompare.com/data/price?fsym=' + element.tokencode + '&tsyms=USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,BNB,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC',
-      //     { json: true }, 
-      //     (err, res, body) => 
-      //     {
-      //       if (err) { return console.log(err); }
-      //       var token = JSON.stringify(body);
-      //       CurrencyValues = JSON.parse(token);          
-      //       for(var currencyItem in CurrencyValues)
-      //       {       
-      //         //console.log("chekc",CurrencyValues[currencyItem])
-      //         conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
-      //         //Get Color 
-      //         var currentPrice=CurrencyValues[currencyItem];
-      //         var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
-      //         //console.log(color);       
-      //         newValues = { $set: { currentvalue:currentPrice,lastvalue:element.currentvalue,colorclass:color}}; 
-
-      //         Token.updateToken(conditionQuery, newValues, function(err, res) {
-      //           if (err) throw err;
-      //          // console.log("Currency  updated");
-        
-      //         });
-           
-      //       }                 
-          
-      //     }); 
+     
     });       
     
     db.close();

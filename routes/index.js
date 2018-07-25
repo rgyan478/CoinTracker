@@ -6,13 +6,7 @@ var Token = require('../models/token');
 var CToken=require('../models/tokenlist');
 var Utility = require('../models/utility');
 var flash = require('connect-flash');
-var JSAlert = require("js-alert");
-//var Tokenarray=require('../models/allarray');
 var query=CToken.find();
-// Get Homepage
-// router.get('/', function(req, res){
-// 	res.render('index');
-// });
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function(req, res) {
@@ -20,53 +14,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
   Token.find({userid:userid},function(err, content) { 
       res.render('index', {  data:content });
     });
-  });
-  
-  //Get tokenlistvalues for token name***
-var  tokennamelist=[];
-var tokennamelists=[];
-CToken.FindTokenlistname({},function(err,tokenlist){
-  if(err) throw err
-for(var i=0;i<tokenlist.length;i++)
-{
-  tokennamelist[i]=tokenlist[i].tokenname;
-}
-}); 
-router.post('/', ensureAuthenticated, function(req, res) {
-  var userid= req.user._id;
-  Token.find({userid:userid},function(err, content) { 
-      res.render('index', {  data:content });
-    
-    for(var i=0;i<content.length;i++)
-      {
-           tokennamelists[i]=content[i].tokencode;
-      }
-    });
-  });
-  console.log("lenth of tokenlists",tokennamelists.length);
-//compare vale for column
-var tokenlistresult=[];
-console.log("lenth of result",tokenlistresult.length);
-for(var i=0;i<tokennamelist.length;i++)
-{
-for(var j=0;j<tokennamelists.length;j++)
-{
-if(tokennamelist[i]==tokennamelists[j])
-{
-tokenlistresult[i]=tokennamelist[i];
-}
-else
-{
-  break;
-}
-}
-}
-for(var i=0; i<tokenlistresult.length;i++)
-{
-console.log("this is result",tokenlistresult[i]);
-}
-
-
+  });  
 function ensureAuthenticated(req, res, next)
 {
   if(req.isAuthenticated())
@@ -81,8 +29,7 @@ function ensureAuthenticated(req, res, next)
 }
 
 // Get Create Token
-router.get('/createtoken', ensureAuthenticated, function(req, res){
-  //res.render('createtoken');
+router.get('/createtoken', ensureAuthenticated, function(req, res){  
   CToken.find(function(err, content) { 
     res.render('createtoken', {  data:content});
   });
@@ -94,15 +41,12 @@ router.get('/admintokenview', ensureAuthenticated, function(req, res){
   CToken.find(function(err, content) { 
     res.render('admintokenview', {  data:content });
 });
-
+});
 
 //Get Create Tokenlist
 router.get('/createtokenlist', ensureAuthenticated, function(req, res){
   
   res.render('createtokenlist');
-});
-
-	// res.render('admintokenview');
 });
 // Get Cancle TokenList
 router.get('/', ensureAuthenticated, function(req, res){
@@ -118,27 +62,22 @@ router.post('/createtoken', function (req, res) {
 	var max=req.body.max;
   var tokencode=req.body.tokencode;
   var currentvalue=0.00000;
-  var lastvalue=0.00000; 
-  //var colorclass='black';
-  var colorclass=Utility.getColor(min, max, currentvalue);
-  
+  var lastvalue=0.00000;  
+  var colorclass=Utility.getColor(min, max, currentvalue);  
 	//validation
 	req.checkBody('currency', 'Currency is required').notEmpty();
 	req.checkBody('min', 'Min value is required').notEmpty();
 	req.checkBody('max', 'Max value is required').notEmpty();
 	var errors=req.validationErrors();
-	if(errors){
-    console.log(errors);
+	if(errors){   
 		res.render('createtoken', {
 			errors:errors
 		});
 	}
   else
-  {
-
-       //Get Current price 
+  {      
+     //Get Current price 
     Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
-
       currentvalue=currentValues[currency];
       lastvalue=currentvalue;
       var colorclass=Utility.getColor(min, max, currentvalue);
@@ -151,13 +90,10 @@ router.post('/createtoken', function (req, res) {
         currentvalue:currentvalue,
         lastvalue:lastvalue,
         colorclass:colorclass
-      });     
-      console.log(colorclass);
-      //var userid= req.user._id;
-      //method start for add token
+      });        
+       //method start for add token
       Token.FindTokencode({userid:userid,currency:currency,tokencode:tokencode},function(err,tokencodes){
-        if(err) throw err
-        
+        if(err) throw err        
         if(tokencodes.length > 0 )
         {    
           req.flash('error_msg','the token name cannot be added because it is already being tracked.');
@@ -172,16 +108,13 @@ router.post('/createtoken', function (req, res) {
           res.redirect('/');
         }});
     });
-		
-  
   }
        
 });  //Close post method
 //Add New Token List
-router.post('/createtokenlist', function(req, res){
- 
+router.post('/createtokenlist', function(req, res){ 
   var tokencode=req.body.tokencode;
-  var tokenname=req.body.tokenname;  
+  var tokenname=req.body.tokenname;   
     //validation
    req.checkBody('tokencode', 'token code is required').notEmpty();
    req.checkBody('tokenname', 'token name is required').notEmpty();
@@ -197,19 +130,32 @@ router.post('/createtokenlist', function(req, res){
        var newToken=new CToken({
            tokencode:tokencode,
            tokenname:tokenname
-         
+          
        });
-       newToken.save(function(err,utoken){
-           if(err) throw err;
-           query.exec(function(err,utoken){
+       //Find Token code and token name 
+       CToken.FindTokencode({tokencode:tokencode,tokenname:tokenname},function(err,tokencodes)
+       {  
+         if(err) throw err;        
+         if(tokencodes.length > 0)
+         {    
+           req.flash('error_msg','the token code cannot be added because it is already being  exist.');
+           res.redirect('/createtokenlist');  
+         }
+         else
+         {
+             newToken.save(function(err,utoken)
+             {
                if(err) throw err;
-              
-           })         
- 
-           res.redirect('admintokenview');
-       })
- 
-   }
+               query.exec(function(err,utoken)
+             {
+               if(err) throw err;
+               
+            })     
+  
+            res.redirect('admintokenview');
+        })         
+        }});
+  }
  
  });  
 
@@ -236,10 +182,8 @@ router.get('/edit/:id', function(req, res) {
     var  uid = req.params.id;    
     var conditionQuery = {_id:uid };   
     console.log("edit id is ",conditionQuery); 
-    Token.find(conditionQuery,function(err, content) { 
-      //console.log(content[0]._id);
-      res.render('edit', {  data:content[0] });
-     // console.log(content) ;    
+    Token.find(conditionQuery,function(err, content) {      
+      res.render('edit', {  data:content[0] });       
     })
 
 });

@@ -2,13 +2,10 @@ var request=require('request');
 
 module.exports.getColor = function(min, max, current){
     if(max < current)
-        //console.log('green');
         return 'green';
     else if(min > current)
-        //console.log('red');
-        return 'red';
+       return 'red';
     else
-        //console.log('black');
         return 'black';
 }
 
@@ -24,9 +21,7 @@ module.exports.getCurrentPriceByAPI = function(token, currencyList, callback){
         if (err) { return console.log(err); }
         var token = JSON.stringify(body);
         CurrencyValues = JSON.parse(token);  
-        //console.log(CurrencyValues);     
+        //callback function for doing the next things after getting CurrencyValues     
         callback(CurrencyValues);   
         });
-
-        //return CurrencyValues; 
 }
