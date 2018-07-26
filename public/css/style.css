@@ -65,7 +65,8 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: Lucida Console;
+  /* font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; */
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
@@ -949,6 +950,7 @@ pre code {
         -ms-flex: 0 0 100%;
             flex: 0 0 100%;
     max-width: 100%;
+    color:white;
   }
   .order-sm-first {
     -webkit-box-ordinal-group: 0;
@@ -1096,6 +1098,7 @@ pre code {
         -ms-flex: 0 0 25%;
             flex: 0 0 25%;
     max-width: 25%;
+    color:white;
   }
   .col-md-4 {
     -webkit-box-flex: 0;
@@ -9584,28 +9587,28 @@ table.dataTable thead .sorting_desc_disabled:after {
   opacity: 0.3;
 }
 
-table.dataTable thead .sorting:before,
+/* table.dataTable thead .sorting:before,
 table.dataTable thead .sorting_asc:before,
 table.dataTable thead .sorting_desc:before,
 table.dataTable thead .sorting_asc_disabled:before,
 table.dataTable thead .sorting_desc_disabled:before {
   right: 1em;
   content: "\2191";
-}
+} */
 
-table.dataTable thead .sorting:after,
+/* table.dataTable thead .sorting:after,
 table.dataTable thead .sorting_asc:after,
 table.dataTable thead .sorting_desc:after,
 table.dataTable thead .sorting_asc_disabled:after,
 table.dataTable thead .sorting_desc_disabled:after {
   right: 0.5em;
   content: "\2193";
-}
+} */
 
-table.dataTable thead .sorting_asc:before,
+/* table.dataTable thead .sorting_asc:before,
 table.dataTable thead .sorting_desc:after {
   opacity: 1;
-}
+} */
 
 table.dataTable thead .sorting_asc_disabled:before,
 table.dataTable thead .sorting_desc_disabled:after {
@@ -13503,7 +13506,7 @@ be a descendant of the grid when it is being dragged.
 
 @media (min-width: 768px) {
   .app-content {
-    background-color:darkgray;
+    background-color:black;
     margin-left: 230px;
   }
 }
@@ -14156,7 +14159,7 @@ be a descendant of the grid when it is being dragged.
 
 .tile {
   position: relative;
-  background: #ffffff;
+  background: black;
   border-radius: 3px;
   padding: 20px;
   -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
@@ -14210,6 +14213,7 @@ be a descendant of the grid when it is being dragged.
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 1.5rem;
+  color:white;
 }
 
 .tile .tile-title-w-btn {
@@ -14245,7 +14249,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .tile .tile-footer {
-  border-top: 1px solid #ddd;
+  /* border-top: 1px solid #ddd; */
   padding: 20px 0 0 0;
   margin-top: 10px;
 }

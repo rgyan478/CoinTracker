@@ -1,10 +1,14 @@
 <div class="row" style="float:right">
     {{!-- <a  href="/index"><img src="images/Refresh.png" style="height: 30px;margin-top: 5px;margin-right: 10px;"/></a> --}}
-    <button id="btnimg" style="border:none; background-color:white;" value="Referesh Page" onclick="window.location.reload()">  <img id="img" src="images/Refresh.png" style="height: 30px;margin-top: 5px;margin-right: 10px;"/></button>
-    <a class="btn btn-secondar" href="/createtoken"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
+    {{!-- <button id="btnimg"  value="Referesh Page" onclick="window.location.reload()"> <span class="glyphicon glyphicon-refresh"></span></button> --}}
+    <a href="" onclick="window.location.reload()">
+         
+         <i class="fa fa-refresh fa-2x" style="margin-top: 22px;margin-right: 10px;" aria-hidden="true"></i>
+       </a>
+    <a class="btn btn-secondar" href="/createtoken" style="margin-top:15px;"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
 </div>
 
-<table class="table table-hover table-bordered" id="sampleTable" >
+<table class="table table-hover table-bordered" id="sampleTable"  >
     <br>
     <thead>
         <tr  style="text-align:center;">
@@ -14,7 +18,8 @@
          <th>Current Price</th>
         <th>Min Price</th>
         <th>Max Price</th>
-        <th>Action</th>               
+        <th>Edit</th> 
+        <th>Delete</th>              
         
        
         </tr>
@@ -23,16 +28,16 @@
         {{#each data}}               
         <tr class="trdata" style="text-align:center;">
            
-            <td class="{{colorclass}}">{{tokencode}}</td>
-            <td class="{{colorclass}}"> {{currency}} </td> 
-            <td class="{{colorclass}}">{{currentvalue}}</td>           
-            <td class="{{colorclass}}"> {{min}} </td>
-            <td class="{{colorclass}}"> {{max}} </td>    
+            <td >{{tokencode}}</td>
+            <td > {{currency}} </td> 
+            <td class="colorclass">{{currentvalue}}</td>           
+            <td > {{min}} </td>
+            <td > {{max}} </td>    
               <td>
-                  <a href='/edit/{{_id}}'><img src="images/edit.png" style="height:22px" /></a> ||
-               <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><img src="images/delete.png" style="height:22px" /></a>
+                  <a href='/edit/{{_id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a> </td>
+             <td>  <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
         
-            ||
+           
                 {{!-- <a href="#"><img src="images/on-off.png" style="height:22px;"/></a> --}}
             </td>                 
         </tr>
@@ -40,15 +45,46 @@
      </tbody>
       
 </table>
+ <div></div>
 <script type='text/javascript'>
 setTimeout("location.reload();",15000);
+    
 
 </script>
 </script>
 <style> 
+    tr:nth-child(even) {background-color: gray;}
   .green{background-color:green;} 
   .red{background-color:red;}
   .black{background-color:black;} 
   .trdata{color: white}
   .tbcolor{background-color: grey;}
+.colorclass {
+   webkit-animation: color_change 5s infinite alternate;
+	-moz-animation: color_change 5s infinite alternate;
+	-ms-animation: color_change 5s infinite alternate;
+	-o-animation: color_change 5s infinite alternate;
+	animation: color_change 5s infinite alternate;
+}
+
+@-webkit-keyframes color_change {
+	from { background-color: green; }
+	to { background-color: red; }
+}
+@-moz-keyframes color_change {
+	from { background-color: green; }
+	to { background-color: red; }
+}
+@-ms-keyframes color_change {
+	from { background-color: green; }
+	to { background-color: red; }
+}
+@-o-keyframes color_change {
+	from { background-color: green; }
+	to { background-color: red; }
+}
+@keyframes color_change {
+	from { background-color: green; }
+	to { background-color: red; }
+}
 </style>

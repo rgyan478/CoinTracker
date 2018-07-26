@@ -8,14 +8,15 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var mongoose = require('mongoose');                 
+var mongoose = require('mongoose');    
+var config=require('./models/config');           
 var request=require('request');
 var player = require('play-sound')();
 
 //mongoose.connect('mongodb://localhost/CurrencyTracker');
 //var db = mongoose.connection;
 //server connection
-mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
+ mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
@@ -85,19 +86,14 @@ app.use(function (req, res, next) {
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
- 
   
   //  Create an Predefiend array of CurrencyList
-  res.locals.currencylistarray=["USD","BIT","EUR","ETH","LTC","BTC","ZRX","AEON","ADX","ADT","ARN","AE","AIX","AST","BEE","BBT","BNB","IOT","HT","ENJ","EOS"]; 
+  res.locals.currencylistarray=["BTC","ETH","LTC","USDT","BNB","USD","CAD","EUR","GBP","AUD","JPY","CNY","KRW","VND"]; 
 
   next();
 });
 app.use('/', routes);
 app.use('/users', users); 
-
-
-
-
 //cron
 // //6 star for running task every second and 5 star for running task every minutes
 var cron = require('node-cron');
@@ -149,8 +145,7 @@ MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
       //Get max value
       var tokenmax=element.max;
       var tokenmin=element.min;
-      Utility.getCurrentPriceByAPI(element.tokencode, 'USD,EUR,YEE,PRE,ZRX,AEON,AIDOC,ADX,ADT,ADST,ARN,AE,AIX,BIT,BNB,BEE,ICN,KIN,KNC,LBC,LSK,LTC,LUN,MCO,DGB,IFT,VTC,VRC', function(currentValues){
-        
+      Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
         for(var currencyItem in currentValues)
         {       
           //console.log("chekc",currentValues[currencyItem])

@@ -75,7 +75,8 @@ router.post('/createtoken', function (req, res) {
 		});
 	}
   else
-  {      
+  {    
+    
      //Get Current price 
     Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
       currentvalue=currentValues[currency];
@@ -96,6 +97,7 @@ router.post('/createtoken', function (req, res) {
         if(err) throw err        
         if(tokencodes.length > 0 )
         {    
+        
           req.flash('error_msg','the token name cannot be added because it is already being tracked.');
           res.redirect('/createtoken');  
         }
@@ -104,13 +106,13 @@ router.post('/createtoken', function (req, res) {
           
           Token.createToken(newToken, function(err, token){
             if(err) throw err;
-            console.log(token);
+           // console.log(token);
           });  
           res.redirect('/');
         }});
-    });
-  }
-       
+    });//End utility
+  
+} 
 });  //Close post method
 //Add New Token List
 router.post('/createtokenlist', function(req, res){ 
@@ -178,12 +180,14 @@ router.get('/delete/:id', function(req, res) {
 
 
 //Find value and bind textbox for edit Tokens
-router.get('/edit/:id', function(req, res) { 
+router.get('/edit/:id', function(req, res) 
+{ 
   var db = req.db; 
     var  uid = req.params.id;    
     var conditionQuery = {_id:uid };   
     console.log("edit id is ",conditionQuery); 
-    Token.find(conditionQuery,function(err, content) {      
+    Token.find(conditionQuery,function(err, content) 
+    {      
       res.render('edit', {  data:content[0] });       
     })
 
