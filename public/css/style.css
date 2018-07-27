@@ -240,6 +240,7 @@ th {
 label {
   display: inline-block;
   margin-bottom: 0.5rem;
+  color: white;
 }
 
 button {
@@ -4999,6 +5000,7 @@ input[type="button"].btn-block {
   color: #FFF;
   background-color: #009688;
   border-color: #009688;
+  display: none;
 }
 
 .page-item.disabled .page-link {

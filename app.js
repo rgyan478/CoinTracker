@@ -9,12 +9,10 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');    
-var config=require('./models/config');           
-var request=require('request');
-var player = require('play-sound')();
-
+var config=require('./models/config');         
+var MongoClient = require('mongodb').MongoClient;
 //mongoose.connect('mongodb://localhost/CurrencyTracker');
-//var db = mongoose.connection;
+
 //server connection
  mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
 var db = mongoose.connection;
@@ -100,20 +98,11 @@ var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
 cron.schedule('*/15 * * * * *', function(){
   console.log('Update currency value every 20 second.');
-//play sound.....
-// player.play('./sound/mps.mp3', function(err){
-//   if (err) throw err
-//   console.log("Audio finished");
-// })
-
-var MongoClient = require('mongodb').MongoClient;
-//var url = "mongodb://localhost:27017/";
-var url = "mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker";//server connection
-var data;
+//Server connection Url "ServerConnectionURL"
+//Local connection Url "LocalConnectionURL"
 var conditionQuery;
 var newValues;
-
-MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
+MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
  var dbo = db.db("currencytracker");
  var array=[]; 
@@ -173,7 +162,6 @@ MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
 });//End Cron
 // Set Port
 app.set('port', (process.env.PORT || 3000));
-
 app.listen(app.get('port'), function(){
 	console.log('Server started on port '+app.get('port'));
 });

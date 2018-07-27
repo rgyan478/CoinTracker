@@ -10,10 +10,19 @@ var query=CToken.find();
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function(req, res) {
-  var userid= req.user._id;
-  Token.find({userid:userid},function(err, content) { 
-      res.render('index', {  data:content });
-    });
+  try
+  {
+    var userid= req.user._id;
+    Token.find({userid:userid},function(err, content) { 
+        res.render('index', {  data:content });
+      });
+  }
+  catch(error )
+  {    
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+  }
+
   });  
 function ensureAuthenticated(req, res, next)
 {
@@ -29,30 +38,67 @@ function ensureAuthenticated(req, res, next)
 }
 
 // Get Create Token
-router.get('/createtoken', ensureAuthenticated, function(req, res){  
-  CToken.find(function(err, content) { 
-    res.render('createtoken', {  data:content});
-  });
+router.get('/createtoken', ensureAuthenticated, function(req, res){ 
+  try
+  { 
+     CToken.find(function(err, content) 
+     { 
+      res.render('createtoken', {  data:content});
+      });
+  }
+  catch(error )
+  {    
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+  }
 });
 
 
 // Get view tokenlist TokenList
 router.get('/admintokenview', ensureAuthenticated, function(req, res){
-  CToken.find(function(err, content) { 
-    res.render('admintokenview', {  data:content });
-});
+try
+{
+  CToken.find(function(err, content) 
+  { 
+   res.render('admintokenview', {  data:content });
+  });
+}
+catch(error )
+  {    
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+  }
+ 
 });
 
 //Get Create Tokenlist
 router.get('/createtokenlist', ensureAuthenticated, function(req, res){
-  
-  res.render('createtokenlist');
+  try
+  {
+    res.render('createtokenlist');
+  }
+  catch(error )
+  {    
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+  }
+ 
 });
 // Get Cancle TokenList
 router.get('/', ensureAuthenticated, function(req, res){
-	res.render('index');
+  try
+  {
+    res.render('index');
+  }
+	catch(error )
+  {    
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+  }
 });
-
+router.get('/error', ensureAuthenticated, function(req, res){
+	res.render('error');
+});
 // Add New Coin Currency Token 
 
 router.post('/createtoken', function (req, res) {
@@ -93,23 +139,31 @@ router.post('/createtoken', function (req, res) {
         colorclass:colorclass
       });        
        //method start for add token
-      Token.FindTokencode({userid:userid,currency:currency,tokencode:tokencode},function(err,tokencodes){
-        if(err) throw err        
-        if(tokencodes.length > 0 )
-        {    
-        
-          req.flash('error_msg','the token name cannot be added because it is already being tracked.');
-          res.redirect('/createtoken');  
-        }
-        else
-        {
-          
-          Token.createToken(newToken, function(err, token){
-            if(err) throw err;
-           // console.log(token);
-          });  
-          res.redirect('/');
-        }});
+       try
+       {
+          Token.FindTokencode({userid:userid,currency:currency,tokencode:tokencode},function(err,tokencodes){
+            if(err) throw err        
+            if(tokencodes.length > 0 )
+            {    
+            
+              req.flash('error_msg','the token name cannot be added because it is already being tracked.');
+              res.redirect('/createtoken');  
+            }
+            else
+            {
+              
+              Token.createToken(newToken, function(err, token){
+                if(err) throw err;
+              // console.log(token);
+              });  
+              res.redirect('/');
+            }});
+      }
+      catch(error)
+      {
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
     });//End utility
   
 } 
@@ -135,30 +189,38 @@ router.post('/createtokenlist', function(req, res){
            tokenname:tokenname
           
        });
-       //Find Token code and token name 
-       CToken.FindTokencode({tokencode:tokencode},function(err,tokencodes)
-       {  
-         if(err) throw err;        
-         if(tokencodes.length > 0)
-         {    
-           req.flash('error_msg','the token code cannot be added because it is already being  exist.');
-           res.redirect('/createtokenlist');  
+       //Find Token code and token name
+       try
+       {     
+            CToken.FindTokencode({tokencode:tokencode},function(err,tokencodes)
+              {  
+                if(err) throw err;        
+                if(tokencodes.length > 0)
+                {    
+                  req.flash('error_msg','the token code cannot be added because it is already being  exist.');
+                  res.redirect('/createtokenlist');  
+                }
+                else
+                {
+                    newToken.save(function(err,utoken)
+                      {
+                          if(err) throw err;
+                          query.exec(function(err,utoken)
+                          {
+                          if(err) throw err;
+                          
+                          })     
+              
+                          res.redirect('admintokenview');
+                        })         
+                }});
          }
-         else
-         {
-             newToken.save(function(err,utoken)
-             {
-               if(err) throw err;
-               query.exec(function(err,utoken)
-             {
-               if(err) throw err;
-               
-            })     
-  
-            res.redirect('admintokenview');
-        })         
-        }});
-  }
+        catch(error)
+        {
+          req.flash('error_msg',error.toString());
+          res.redirect('error');
+        }
+     }
  
  });  
 
@@ -168,13 +230,19 @@ router.get('/delete/:id', function(req, res) {
   var db = req.db; 
   var uid = req.params.id.toString();    
     var conditionQuery = {_id:uid };
-    
-    console.log("Id",conditionQuery);
-    Token.deleteToken(conditionQuery, function(err, res) {
-      if (err) throw err;
-      console.log("1 document delete");    
-    });
-    res.redirect('/');  
+      try
+      {
+        Token.deleteToken(conditionQuery, function(err, res) {
+          if (err) throw err;
+          console.log("1 document delete");    
+        });
+        res.redirect('/');  
+      }
+      catch(error)
+      {
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
 
 });
 
@@ -185,11 +253,18 @@ router.get('/edit/:id', function(req, res)
   var db = req.db; 
     var  uid = req.params.id;    
     var conditionQuery = {_id:uid };   
-    console.log("edit id is ",conditionQuery); 
-    Token.find(conditionQuery,function(err, content) 
-    {      
-      res.render('edit', {  data:content[0] });       
-    })
+    try
+    {
+      Token.find(conditionQuery,function(err, content) 
+      {      
+        res.render('edit', {  data:content[0] });       
+      })
+    }
+    catch(error)
+    {
+      req.flash('error_msg',error.toString());
+      res.redirect('error');
+    }
 
 });
 
@@ -203,14 +278,23 @@ router.post('/edit', function (req, res) {
   var currentvalue=req.body.currentvalue;
   var  conditionQuerys = {_id:id};  
   var color=Utility.getColor(min, max, currentvalue);
-   newValues = { $set: {tokencode:tokencode,currency:currency,min:min,max:max,colorclass:color}};        
+  try
+  {
+    newValues = { $set: {tokencode:tokencode,currency:currency,min:min,max:max,colorclass:color}};        
     Token.updateTokenbyId(conditionQuerys, newValues, function(err, res)
       {
-     if (err) throw err;
+          if (err) throw err;
           console.log("Token  updated");
       });
     res.redirect('/'); 
 
+  }
+  catch(error)
+  {
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+  }
+  
 });
 //---------------------------------End--------------------------------------------------------------//
 //---------------------------------------------Start Token List Update And Delete-----------------------------//
@@ -219,12 +303,19 @@ router.get('/deleted/:id', function(req, res) {
   var db = req.db; 
   var uid = req.params.id.toString();    
     var conditionQuery = {_id:uid };    
-    console.log("Id",conditionQuery);
-    CToken.deleteToken(conditionQuery, function(err, res) {
-      if (err) throw err;
-      console.log("Token List delete");    
-    });
-   res.redirect('/admintokenview');  
+    try
+    {
+          CToken.deleteToken(conditionQuery, function(err, res) {
+            if (err) throw err;
+            console.log("Token List delete");    
+           });
+           res.redirect('/admintokenview');  
+    }
+      catch(error)
+      {
+          req.flash('error_msg',error.toString());
+          res.redirect('error');
+      }
 
 });
 //------------------Edit TokenList---------------------------------------------------------//
@@ -233,26 +324,40 @@ router.post('/updatetokenlist', function (req, res) {
   var tokencode = req.body.tokencode;
 	var tokenname=req.body.tokenname;
   var  conditionQuerys = {_id:id};  
-     newValues = { $set: {tokencode:tokencode,tokenname:tokenname}};        
-    CToken.updateTokenbyId(conditionQuerys, newValues, function(err, res)
+      try
       {
-     if (err) throw err;
-          console.log("Tokenlist  updated");
-      });
-    res.redirect('admintokenview'); 
+        newValues = { $set: {tokencode:tokencode,tokenname:tokenname}};        
+        CToken.updateTokenbyId(conditionQuerys, newValues, function(err, res)
+          {
+              if (err) throw err;
+              console.log("Tokenlist  updated");
+          });
+        res.redirect('admintokenview'); 
+      }
+        catch(error)
+        {
+          req.flash('error_msg',error.toString());
+          res.redirect('error');
+        }
 
 });
 //------------------Find value and bind textbox for edit TokenList----------------------------//
 router.get('/Edittokenlist/:id', function(req, res) { 
-  var db = req.db; 
+    var db = req.db; 
     var  uid = req.params.id;    
     var conditionQuery = {_id:uid };   
-    console.log("edit id is ",conditionQuery); 
-    CToken.find(conditionQuery,function(err, content) { 
-      //console.log(content[0]._id);
-      res.render('Edittokenlist', {  data:content[0] });
-      console.log("Tokenlist",content) ;    
-    })
+    try
+    {
+            CToken.find(conditionQuery,function(err, content) {               
+              res.render('Edittokenlist', {  data:content[0] });
+              console.log("Tokenlist",content) ;    
+            })
+    }
+    catch(error)
+    {
+    req.flash('error_msg',error.toString());
+    res.redirect('error');
+    }
 
 });
 //----------------------------------------End---------------------------------------//
