@@ -2,10 +2,10 @@
   "name": "currencytracker",
   "version": "1.0.0",
   "description": "currency tracker with authentication process",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "heroku-prebuild": "npm install",
-    "start":"node app.js"
+    "start":"node server.js"
   },
   "author": "",
   "license": "ISC",

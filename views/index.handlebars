@@ -14,7 +14,7 @@
         <tr  style="text-align:center;">
            
         <th>Token Name</th>
-        <th>Currency Of Reference</th>
+        <th>Pair</th>
          <th>Current Price</th>
         <th>Min Price</th>
         <th>Max Price</th>
@@ -28,11 +28,11 @@
         {{#each data}}               
         <tr class="trdata" style="text-align:center;">
            
-            <td >{{tokencode}}</td>
-            <td > {{currency}} </td> 
+            <td class={{colorclass}} >{{tokencode}}</td>
+            <td  class={{colorclass}}> {{tokencode}}/{{currency}} </td> 
             <td class={{colorclass}}>{{currentvalue}}</td>           
-            <td > {{min}} </td>
-            <td > {{max}} </td>    
+            <td  class={{colorclass}}> {{min}} </td>
+            <td  class={{colorclass}}> {{max}} </td>    
               <td>
                   <a href='/edit/{{_id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a> </td>
              <td>  <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
@@ -53,9 +53,9 @@ setTimeout("location.reload();",30000);
 </script>
 </script>
 <style>
+ tr:nth-child(even) {background-color: gray;}
  .green{background-color:green; animation-duration:6000ms; animation-name: blink; animation-iteration-count:infinite; animation-direction: alternate }
  .red{background-color:red; animation-duration: 3000ms; animation-name: blink1; animation-iteration-count:infinite; animation-direction: alternate }
- .black{background-color:black; animation-duration: 1500ms; animation-name:blink2; animation-iteration-count:infinite; animation-direction: alternate }
  .trdata{color: white; animation-duration: 2000ms; animation-name: blink3; animation-iteration-count:infinite; animation-direction: alternate }
  .tbcolor{background-color: grey; animation-duration: 2000ms; animation-name: blink4; animation-iteration-count: :infinite; animation-direction: alternate }
 @keyframes blink {
@@ -65,17 +65,5 @@ setTimeout("location.reload();",30000);
 @keyframes blink1 {
   from { background-color: red; }
     to { background-color:#0606065c }
-}
- @keyframes blink2 {
-  from { background-color: black; }
-    to { background-color:rgb(169,169,169) }
-}
- @keyframes blink2 {
-  from { background-color:white; }
-    to { background-color:wheat}
-}
- @keyframes blink2 {
-  from { background-color:gray; }
-    to { background-color:gainsboro }
 }
 </style>
