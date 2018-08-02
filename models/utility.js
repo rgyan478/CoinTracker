@@ -1,9 +1,9 @@
 var request=require('request');
 
 module.exports.getColor = function(min, max, current){
-    if(max < current)
+    if(parseFloat(max) < parseFloat(current))
         return 'green';
-    else if(min > current)
+    else if(parseFloat(min) > parseFloat(current))
        return 'red';
     else
         return 'black';
