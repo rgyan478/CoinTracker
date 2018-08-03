@@ -13,9 +13,20 @@ router.get('/', ensureAuthenticated, function(req, res) {
   try
   {
     var userid= req.user._id;
+    var isAdmin=req.user.isAdmin;
+   if(isAdmin == true)
+   {
+    Token.find({},function(err, content) { 
+      res.render('index', {  data:content });
+    });
+   }
+   else
+   {
     Token.find({userid:userid},function(err, content) { 
-        res.render('index', {  data:content });
-      });
+      res.render('index', {  data:content });
+    });
+   }
+   
   }
   catch(error )
   {    
@@ -140,7 +151,7 @@ router.post('/createtoken', function (req, res) {
       });        
        //method start for add token
        try
-       {
+       {              
           Token.FindTokencode({userid:userid,currency:currency,tokencode:tokencode},function(err,tokencodes){
             if(err) throw err        
             if(tokencodes.length > 0 )
@@ -158,12 +169,14 @@ router.post('/createtoken', function (req, res) {
               });  
               res.redirect('/');
             }});
-      }
+          }
+      
       catch(error)
       {
         req.flash('error_msg',error.toString());
         res.redirect('error');
       }
+    
     });//End utility
   
 } 

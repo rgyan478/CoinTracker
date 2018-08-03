@@ -8,61 +8,90 @@
     <a class="btn btn-secondar" href="/createtoken" style="margin-top:15px;"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
 </div>
 
-<table class="table table-hover table-bordered" id="sampleTable"  >
-    <br>
-    <thead>
-        <tr  style="text-align:center;">
-           
-        <th>Token</th>
-        <th>Pair</th>
-         <th>Current Price</th>
-        <th>Min Price</th>
-        <th>Max Price</th>
-        <th>Edit</th> 
-        <th>Delete</th>              
+<div id="mydiv">
+    <table class="table table-hover table-bordered" id="sampleTable"  >
+        <br>
+        <thead>
+            <tr  style="text-align:center;">
+                <th>Token</th>
+                <th>Pair</th>
+                <th>Current Price</th>
+                <th>Min Price</th>
+                <th>Max Price</th>
+                <th>Edit</th> 
+                <th>Delete</th>              
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}               
+            <tr class="trdata_{{colorclass}}" style="text-align:center;">
+            
+                <td class={{colorclass}} >{{tokencode}}
+                </td>
+                <td  class={{colorclass}}> {{tokencode}}/{{currency}} </td> 
+                <td class={{colorclass}}>{{currentvalue}}</td>           
+                <td  class={{colorclass}}> {{min}} </td>
+                <td  class={{colorclass}}> {{max}} </td>    
+                <td>
+                    <a href='/edit/{{_id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a> </td>
+                <td>  <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>       
+            
+                
+                </td>                 
+            </tr>
+            {{/each}}
+        </tbody>
         
-       
-        </tr>
-    </thead>
-    <tbody>
-        {{#each data}}               
-        <tr class="trdata" style="text-align:center;">
-           
-            <td class={{colorclass}} >{{tokencode}}</td>
-            <td  class={{colorclass}}> {{tokencode}}/{{currency}} </td> 
-            <td class={{colorclass}}>{{currentvalue}}</td>           
-            <td  class={{colorclass}}> {{min}} </td>
-            <td  class={{colorclass}}> {{max}} </td>    
-              <td>
-                  <a href='/edit/{{_id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a> </td>
-             <td>  <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>       
-           
-               
-            </td>                 
-        </tr>
-        {{/each}}
-     </tbody>
-      
-</table>
- <div></div>
-<script type='text/javascript'>
-setTimeout("location.reload();",30000);
-    
+    </table>
+</div>
 
-</script>
+<script type='text/javascript'>
+    audioNotification();
+    function audioNotification()
+    {
+        let myTable=document.getElementById("sampleTable");
+        let tbRows=myTable.getElementsByTagName("tr");
+        let audioNotificationForGreen = new Audio('./sound/messag.mp3');
+        let audioNotificationForRed = new Audio('./sound/bell.mp3');
+        let interval=1;
+        for(let i=0; i < tbRows.length; i++)
+        {
+            if(tbRows[i].className == "trdata_black")
+            {
+                continue;
+            }
+            
+            if(tbRows[i].className == "trdata_green")
+            {
+                setTimeout(function(){
+                   // alert("trdata_green "+(i));
+                    audioNotificationForGreen.play();
+                    }, 4000 * interval)
+            }
+            else if(tbRows[i].className == "trdata_red"){
+                setTimeout(function(){
+                   // alert("trdata_red "+(i));
+                    audioNotificationForRed.play();
+                    }, 4000 * interval)
+            }
+
+            interval++;
+        }
+    }
+setTimeout("location.reload();",30000);
 </script>
 <style>
-
- .green{background-color:green; animation-duration:6000ms; animation-name: blink; animation-iteration-count:infinite; animation-direction: alternate }
- .red{background-color:red; animation-duration: 3000ms; animation-name: blink1; animation-iteration-count:infinite; animation-direction: alternate }
- .trdata{color: white; animation-duration: 2000ms; animation-name: blink3; animation-iteration-count:infinite; animation-direction: alternate }
- .tbcolor{background-color: grey; animation-duration: 2000ms; animation-name: blink4; animation-iteration-count: :infinite; animation-direction: alternate }
-@keyframes blink {
-  from { background-color: #2f9e49; }
-    to { background-color:#0606065c;}
-}
-@keyframes blink1 {
-  from { background-color: red; }
-    to { background-color:#0606065c }
-}
+    tr:nth-child(even) {background-color: black;}
+    .green{background-color:green; animation-duration:6000ms; animation-name: blink; animation-iteration-count:infinite; animation-direction: alternate }
+    .red{background-color:red; animation-duration: 3000ms; animation-name: blink1; animation-iteration-count:infinite; animation-direction: alternate }
+    .trdata{color: white; animation-duration: 2000ms; animation-name: blink3; animation-iteration-count:infinite; animation-direction: alternate }
+    .tbcolor{background-color: grey; animation-duration: 2000ms; animation-name: blink4; animation-iteration-count: :infinite; animation-direction: alternate }
+    @keyframes blink {
+    from { background-color: #2f9e49; }
+        to { background-color:#0606065c;}
+    }
+    @keyframes blink1 {
+    from { background-color: red; }
+        to { background-color:#0606065c }
+    }
 </style>

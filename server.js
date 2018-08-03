@@ -98,6 +98,7 @@ var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
 cron.schedule('*/15 * * * * *', function(){
   console.log('Update currency value every 20 second.');
+ 
 //Server connection Url "ServerConnectionURL"
 //Local connection Url "LocalConnectionURL"
 var conditionQuery;
