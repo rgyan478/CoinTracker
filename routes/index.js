@@ -11,23 +11,22 @@ var query=CToken.find();
 /* GET home page. */
 router.get('/', ensureAuthenticated, function(req, res) {
   try
-  {
-    var userid= req.user._id;
-    var isAdmin=req.user.isAdmin;
-   if(isAdmin == true)
-   {
-    Token.find({},function(err, content) { 
-      res.render('index', {  data:content });
+  {    
+    Token.aggregate([
+      {
+            $lookup:
+                  {
+                    from:'tokenlists',
+                    localField:'tokencode',
+                    foreignField:'tokencode',
+                    as:'tokenlist'
+                  }
+      }      
+  ],function(err, content) { 
+      res.render('index',{ data:content });    
+      //console.log(JSON.stringify(content[0].tokenlist[0].tokenname)); 
     });
-   }
-   else
-   {
-    Token.find({userid:userid},function(err, content) { 
-      res.render('index', {  data:content });
-    });
-   }
-   
-  }
+   }    
   catch(error )
   {    
     req.flash('error_msg',error.toString());
@@ -35,6 +34,8 @@ router.get('/', ensureAuthenticated, function(req, res) {
   }
 
   });  
+
+  
 function ensureAuthenticated(req, res, next)
 {
   if(req.isAuthenticated())

@@ -105,7 +105,7 @@ var conditionQuery;
 var newValues;
 MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
- var dbo = db.db("currencytracker");
+ var dbo = db.db("CurrencyTracker");
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
@@ -131,10 +131,12 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
     result.forEach(element => {  
 
       var CurrencyValues;
-      //console.log("color",result.colorclass);
+      
       //Get max value
       var tokenmax=element.max;
       var tokenmin=element.min;
+      var priviousColor=element.colorclass;
+      //console.log('PreviousColor:'+priviousColor);
       Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
         for(var currencyItem in currentValues)
         {       
@@ -143,12 +145,32 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
           //Get Color 
           var currentPrice=currentValues[currencyItem];
           var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
+          
+          if(priviousColor == 'green')
+          {
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            tokenmax=currentPrice;
+            //console.log('PreviousColor:'+priviousColor);
+            
+          }
+          else if(priviousColor == 'red')
+          {
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            tokenmin=currentPrice;
+            //console.log('PreviousColor:'+priviousColor);
+            
+          }
           //console.log(color);       
-          newValues = { $set: { currentvalue:currentPrice,lastvalue:element.currentvalue,colorclass:color}}; 
+          newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
 
           Token.updateToken(conditionQuery, newValues, function(err, res) {
             if (err) throw err;
-            // console.log("Currency  updated");
+
+            if(res.nModified == 1)
+            {
+              //console.log(res);
+              console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            }
     
           });
         
