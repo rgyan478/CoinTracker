@@ -103,7 +103,7 @@ cron.schedule('*/15 * * * * *', function(){
 //Local connection Url "LocalConnectionURL"
 var conditionQuery;
 var newValues;
-MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
+MongoClient.connect(config.LocalConnectionURL, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
  var dbo = db.db("currencytracker");
  var array=[]; 
