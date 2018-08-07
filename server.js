@@ -105,7 +105,7 @@ var conditionQuery;
 var newValues;
 MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
- var dbo = db.db("CurrencyTracker");
+ var dbo = db.db("currencytracker");
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
@@ -169,7 +169,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
             if(res.nModified == 1)
             {
               //console.log(res);
-              console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            //  console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             }
     
           });
