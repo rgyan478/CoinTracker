@@ -10,53 +10,85 @@ var query=CToken.find();
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function(req, res) {
-  try
-  {    
-    Token.aggregate([
-      {
-            $lookup:
-                  {
-                    from:'tokenlists',
-                    localField:'tokencode',
-                    foreignField:'tokencode',
-                    as:'tokenlist'
-                  }
-      }      
-  ],function(err, content) { 
-      res.render('index',{ data:content });    
-      //console.log(JSON.stringify(content[0].tokenlist[0].tokenname)); 
-    });
-   }    
-  catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
-
-  });  
-
   
-function ensureAuthenticated(req, res, next)
-{
-  if(req.isAuthenticated())
-  {
-    return next();
-  }
-  else
-  {
-    req.flash('error_msg','You are not logged in.');
-    res.redirect('/users/login');
-  }
-}
-
-// Get Create Token
-router.get('/createtoken', ensureAuthenticated, function(req, res){ 
+  var isAdmin=req.user.isAdmin;
   try
-  { 
-     CToken.find(function(err, content) 
-     { 
-      res.render('createtoken', {  data:content});
-      });
+  {    
+    if(isAdmin == true)
+    {
+          Token.aggregate([
+            {
+                  $lookup:
+                        {
+                          from:'tokenlists',
+                          localField:'tokencode',
+                          foreignField:'tokencode',
+                          as:'tokenlist'
+                        }
+            }
+            
+        ],function(err, content) { 
+            res.render('index',{ data:content });    
+           // console.log(JSON.stringify(content)); 
+           // console.log("UserId",req.user._id);
+          });
+   }
+   else
+   {
+    var userId= req.user._id;   
+              Token.aggregate([
+                {
+                      $lookup:
+                            {
+                              from:'tokenlists',
+                              localField:'tokencode',
+                              foreignField:'tokencode',
+                              as:'tokenlist'
+                            }
+                },
+                {
+                
+                  $match:{userid:userId.toString()}     
+                }  
+               
+            ],function(err, content) { 
+                res.render('index',{ data:content });    
+               // console.log(JSON.stringify(content)); 
+                //console.log("UserId",req.user._id);
+              
+              });
+      }
+     }    
+      catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
+
+      });  
+
+      
+    function ensureAuthenticated(req, res, next)
+    {
+      if(req.isAuthenticated())
+      {
+        return next();
+      }
+      else
+      {
+        req.flash('error_msg','You are not logged in.');
+        res.redirect('/users/login');
+      }
+    }
+
+    // Get Create Token
+    router.get('/createtoken', ensureAuthenticated, function(req, res){ 
+      try
+      { 
+        CToken.find(function(err, content) 
+        { 
+          res.render('createtoken', {  data:content});
+          });
   }
   catch(error )
   {    

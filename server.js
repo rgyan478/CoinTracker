@@ -109,7 +109,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
-   
+  // console.log("total",result);
     if (err) throw err;   
       
     //loop for get unique value from array
@@ -136,26 +136,31 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
       var tokenmax=element.max;
       var tokenmin=element.min;
       var priviousColor=element.colorclass;
+      var currency=element.currency;
       //console.log('PreviousColor:'+priviousColor);
       Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
         for(var currencyItem in currentValues)
         {       
-          //console.log("chekc",currentValues[currencyItem])
+          if(currency !=currencyItem)
+            continue;
+
+          //console.log("cureencycode",currencyItem);
+          //console.log("tokencode",element.tokencode);
           conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
           //Get Color 
           var currentPrice=currentValues[currencyItem];
           var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
-          
+         // console.log("colorname",color);
           if(priviousColor == 'green')
           {
-            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             tokenmax=currentPrice;
             //console.log('PreviousColor:'+priviousColor);
             
           }
           else if(priviousColor == 'red')
           {
-            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             tokenmin=currentPrice;
             //console.log('PreviousColor:'+priviousColor);
             
