@@ -14,7 +14,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
   var isAdmin=req.user.isAdmin;
   try
   {    
-    if(isAdmin == true)
+    if(isAdmin == true)//
     {
           Token.aggregate([
             {
@@ -28,9 +28,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
             }
             
         ],function(err, content) { 
-            res.render('index',{ data:content });    
-           // console.log(JSON.stringify(content)); 
-           // console.log("UserId",req.user._id);
+            res.render('index',{ data:content });         
           });
    }
    else
@@ -52,10 +50,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
                 }  
                
             ],function(err, content) { 
-                res.render('index',{ data:content });    
-               // console.log(JSON.stringify(content)); 
-                //console.log("UserId",req.user._id);
-              
+                res.render('index',{ data:content });                                
               });
       }
      }    
@@ -65,80 +60,80 @@ router.get('/', ensureAuthenticated, function(req, res) {
         res.redirect('error');
       }
 
-      });  
+});  
 
       
     function ensureAuthenticated(req, res, next)
-    {
-      if(req.isAuthenticated())
       {
-        return next();
+              if(req.isAuthenticated())
+              {
+                return next();
+              }
+              else
+              {
+                req.flash('error_msg','You are not logged in.');
+                res.redirect('/users/login');
+              }
       }
-      else
-      {
-        req.flash('error_msg','You are not logged in.');
-        res.redirect('/users/login');
-      }
-    }
 
     // Get Create Token
-    router.get('/createtoken', ensureAuthenticated, function(req, res){ 
-      try
+router.get('/createtoken', ensureAuthenticated, function(req, res){ 
+  try
+  { 
+      CToken.find(function(err, content) 
       { 
-        CToken.find(function(err, content) 
-        { 
-          res.render('createtoken', {  data:content});
-          });
-  }
-  catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
-});
+        res.render('createtoken', {  data:content});
+        });
+    }
+      catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
+  });
 
 
 // Get view tokenlist TokenList
 router.get('/admintokenview', ensureAuthenticated, function(req, res){
-try
-{
-  CToken.find(function(err, content) 
-  { 
-   res.render('admintokenview', {  data:content });
-  });
-}
-catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
+    try
+    {
+      CToken.find(function(err, content) 
+      { 
+      res.render('admintokenview', {  data:content });
+      });
+    }
+    catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
  
 });
 
 //Get Create Tokenlist
 router.get('/createtokenlist', ensureAuthenticated, function(req, res){
-  try
-  {
-    res.render('createtokenlist');
-  }
-  catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
- 
+      try
+      {
+        res.render('createtokenlist');
+      }
+      catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
+    
 });
 // Get Cancle TokenList
 router.get('/', ensureAuthenticated, function(req, res){
-  try
-  {
-    res.render('index');
-  }
-	catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
+    try
+    {
+      res.render('index');
+    }
+    catch(error )
+    {    
+      req.flash('error_msg',error.toString());
+      res.redirect('error');
+    }
 });
 router.get('/error', ensureAuthenticated, function(req, res){
 	res.render('error');
@@ -168,7 +163,7 @@ router.post('/createtoken', function (req, res) {
   {    
     
      //Get Current price 
-    Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
+      Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
       currentvalue=currentValues[currency];
       lastvalue=currentvalue;
       var colorclass=Utility.getColor(min, max, currentvalue);

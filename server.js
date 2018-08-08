@@ -15,7 +15,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 //server connection
 mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
- //mongoose.connect('mongodb://localhost:27017/crypto_moon_tracker');
+//mongoose.connect('mongodb://localhost:27017/crypto_moon_tracker');
 var db = mongoose.connection;
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -174,7 +174,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
             if(res.nModified == 1)
             {
               //console.log(res);
-            //  console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             }
     
           });

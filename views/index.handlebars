@@ -27,7 +27,7 @@
             <tr class="trdata_{{colorclass}}" >
             
                 <td class={{colorclass}} >{{tokencode}} - {{#each tokenlist}} {{tokenname}} {{/each}}</td>
-                <td style="text-align:center;" class={{colorclass}}> {{currency}}/{{tokencode}}</td> 
+                <td style="text-align:center;" class={{colorclass}}>{{tokencode}}/{{currency}}</td> 
                 <td style="text-align:center;" class={{colorclass}}>{{currentvalue}} {{currency}}</td>           
                 <td style="text-align:center;" class={{colorclass}}> {{min}} </td>
                 <td style="text-align:center;" class={{colorclass}}> {{max}} </td>    
@@ -50,7 +50,7 @@
     {
         let myTable=document.getElementById("sampleTable");
         let tbRows=myTable.getElementsByTagName("tr");
-        let audioNotificationForGreen = new Audio('./sound/messag.mp3');
+        let audioNotificationForGreen = new Audio('./sound/jackpot.mp3');
         let audioNotificationForRed = new Audio('./sound/bell.mp3');
         let interval=1;
         for(let i=0; i < tbRows.length; i++)
