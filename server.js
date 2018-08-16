@@ -1,52 +1,61 @@
 var express = require('express');
-    path = require('path');
-    cookieParser = require('cookie-parser');
-    bodyParser = require('body-parser');
-    exphbs = require('express-handlebars');
-    expressValidator = require('express-validator');
-    flash = require('connect-flash');
-    session = require('express-session');
-    passport = require('passport');
-    LocalStrategy = require('passport-local').Strategy;
-    mongoose = require('mongoose');    
-    config=require('./models/config');         
-    MongoClient = require('mongodb').MongoClient;
-    routes = require('./routes/index');
-    users = require('./routes/users');
-    Token = require('./models/token');
-    Utility = require('./models/utility');
-    app = express();// Init App
-    cron = require('node-cron');
-    mongoose.connect(config.ConnectionURL);  
-    // View Engine
-    app.set('views', path.join(__dirname, 'views'));
-    app.engine('handlebars', exphbs({defaultLayout:'layout'}));
-    app.set('view engine', 'handlebars');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var exphbs = require('express-handlebars');
+var expressValidator = require('express-validator');
+var flash = require('connect-flash');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var mongoose = require('mongoose');    
+var config=require('./models/config');         
+var MongoClient = require('mongodb').MongoClient;
+mongoose.connect(config.ServerConnectionURL);
 
-    // BodyParser Middleware
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(cookieParser());
+//server connection
+//mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
+//mongoose.connect('mongodb://localhost:27017/crypto_moon_tracker');
+var db = mongoose.connection;
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var Token = require('./models/token');
+var Utility = require('./models/utility');
+// Init App
+var app = express();
 
-    // Set Static Folder
-    app.use(express.static(path.join(__dirname, 'public')));
-    
-    // Express Session
-    app.use(session({
-        secret: 'secret',
-        saveUninitialized: true,
-        resave: true
-    }));
+var cron = require('node-cron');
 
-    // Passport init
-    app.use(passport.initialize());
-    app.use(passport.session());
+// View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.engine('handlebars', exphbs({defaultLayout:'layout'}));
+app.set('view engine', 'handlebars');
 
-    //Login UserName show
-    app.get('*', function(req, res, next){
-      res.locals.user = req.user || null; 
-      next();
-    });
+// BodyParser Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+// Set Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Express Session
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: true
+}));
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Login UserName show
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null; 
+  next();
+});
+
 
 // Express Validator
 app.use(expressValidator({
@@ -83,17 +92,26 @@ app.use(function (req, res, next) {
 });
 app.use('/', routes);
 app.use('/users', users); 
-//Start Cron-Every 20 sECOND
+//cron
+// //6 star for running task every second and 5 star for running task every minutes
+var cron = require('node-cron');
+ //Start Cron-Every 20 sECOND
 cron.schedule('*/15 * * * * *', function(){
-console.log('Update currency value every 20 second.'); 
+  console.log('Update currency value every 20 second.');
+ 
+//Server connection Url "ServerConnectionURL"
+//Local connection Url "LocalConnectionURL"
 var conditionQuery;
 var newValues;
- MongoClient.connect(config.ConnectionURL, { useNewUrlParser: true } , function(err, db) {
+MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
  if (err) throw err;
  var dbo = db.db("currencytracker");
+ var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
-    if (err) throw err;         
+  // console.log("total",result);
+    if (err) throw err;   
+      
     //loop for get unique value from array
     for(var i=0;i<=result.length;i++)
     {
@@ -108,36 +126,57 @@ var newValues;
               continue;
         }
       }
-    }   
-    result.forEach(element => {       
+    }
+   
+    result.forEach(element => {  
+
+      var CurrencyValues;
+      
       //Get max value
       var tokenmax=element.max;
-          tokenmin=element.min;
-          priviousColor=element.colorclass;
-          currency=element.currency;    
-          Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
+      var tokenmin=element.min;
+      var priviousColor=element.colorclass;
+      var currency=element.currency;
+      //console.log('PreviousColor:'+priviousColor);
+      Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
         for(var currencyItem in currentValues)
         {       
           if(currency !=currencyItem)
-            continue;         
+            continue;
+
+          //console.log("cureencycode",currencyItem);
+          //console.log("tokencode",element.tokencode);
           conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
           //Get Color 
           var currentPrice=currentValues[currencyItem];
-          var color=Utility.getColor(tokenmin, tokenmax, currentPrice)       
+          var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
+         // console.log("colorname",color);
           if(priviousColor == 'green')
-          {           
-            tokenmax=currentPrice;                      
+          {
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            tokenmax=currentPrice;
+            //console.log('PreviousColor:'+priviousColor);
+            
           }
           else if(priviousColor == 'red')
-          {          
-            tokenmin=currentPrice;        
+          {
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            tokenmin=currentPrice;
+            //console.log('PreviousColor:'+priviousColor);
             
-          }                
-          newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}};
+          }
+          //console.log(color);       
+          newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
+
           Token.updateToken(conditionQuery, newValues, function(err, res) {
             if (err) throw err;
-            console.log("Update !")
-           
+
+            if(res.nModified == 1)
+            {
+              //console.log(res);
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            }
+    
           });
         
         } 
@@ -154,5 +193,3 @@ app.set('port', (process.env.PORT || 8080));
 app.listen(app.get('port'), function(){
 	console.log('Server started on port '+app.get('port'));
 });
-
-
