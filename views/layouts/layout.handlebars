@@ -6,6 +6,8 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:site" content="@CryptoMoonTracker">
     <meta property="twitter:creator" content="@CryptoMoonTracker">
+    {{!-- <link rel="icon" href="#"><img src="images/download.png" ></link> --}}
+     <link rel="icon" href="../images/download.PNG" type="image/PNG" sizes="32x32">
     <!-- Open Graph Meta-->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Crypto Moon Tracker">
@@ -22,14 +24,19 @@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
-  <body class="app sidebar-mini rtl">
+    
+  <body class="app sidebar-mini rtl sidenav-toggled">
 
     {{#if user}}
       <!-- Navbar-->
       <header class="app-header">
         {{!-- <a class="app-header__logo" href="/">CryptoMoonTracker</a> --}}
-        <img alt="" src="images/crypto_moon_tracker_logo.png" style="    height: 18px; margin-top: 14px"/>
-        <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+      
+        <img alt="" src="images/crypto_moon_tracker_logo.png" style=" height: 18px; margin-top: 14px"/>
+        <!-- Sidebar toggle button-->
+     {{#if user.isAdmin}}
+       <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+       {{/if}}
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
           <li style="display:none;" class="app-search">
@@ -82,13 +89,20 @@
           <!-- User Menu-->
           <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
             <ul class="dropdown-menu settings-menu dropdown-menu-right">
+              
               <li><a class="dropdown-item" href="/users/logout"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+             
+                 {{!-- <p style="margin-left: 23px;"><input type="checkbox" name="volumemute"   id="volumemute">&nbsp;&nbsp;&nbsp;Mute Volume</p> --}}
+                
             </ul>
           </li>
         </ul>
       </header>
+       <aside class="app-sidebar" style="background-color:black;"></aside>
+           {{#if user.isAdmin}}
       <!-- Sidebar menu-->
       <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+     
       <aside class="app-sidebar">
         <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="#" alt="">
           <div>
@@ -98,7 +112,7 @@
         </div>
         <ul class="app-menu">
           <li><a class="app-menu__item" href="/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
-          {{#if user.isAdmin}}
+       
             <li><a id="admintokenview" class="app-menu__item" href="/admintokenview"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">View TokenList</span></a></li>
             <li><a id="createtokenlist" class="app-menu__item" href="/createtokenlist"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Add New TokenList</span></a></li>
           {{/if}}

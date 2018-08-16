@@ -1,11 +1,20 @@
 <div class="row" style="float:right">
     {{!-- <a  href="/index"><img src="images/Refresh.png" style="height: 30px;margin-top: 5px;margin-right: 10px;"/></a> --}}
     {{!-- <button id="btnimg"  value="Referesh Page" onclick="window.location.reload()"> <span class="glyphicon glyphicon-refresh"></span></button> --}}
-    <a href="" onclick="window.location.reload()">
-         
+    <a href="" onclick="window.location.reload()">         
          <i class="fa fa-refresh fa-2x" style="margin-top: 22px;margin-right: 10px;" aria-hidden="true"></i>
-       </a>
+    </a>
     <a class="btn btn-secondar" href="/createtoken" style="margin-top:15px;"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
+    <form id="form1" action="/mutevolume" method="POST">
+        <a class="btn btn-secondar"  style="margin-top:15px;">
+         {{#if user.isMute}}
+            <input type="image" id="volume"  name="volumenable" src="../images/volumedisable.png" title="Mute" height="22px" width="22px"  >
+        {{else}}
+            <input type="image"  id="volumedisable" src="../images/volenable.png" title="Unmute"  height="22px" width="22px" style="display:display">
+        {{/if}}
+        </a>
+    </form>
+    
 </div>
 
 <div id="mydiv">
@@ -19,35 +28,39 @@
                 <th>Min Price</th>
                 <th>Max Price</th>
                 <th>Edit</th> 
-                <th>Delete</th>              
+                <th>Delete</th>
+                              
             </tr>
         </thead>
         <tbody>
             {{#each data}}               
-            <tr class="trdata_{{colorclass}}" >
-            
-                <td class={{colorclass}} >{{tokencode}} - {{#each tokenlist}} {{tokenname}} {{/each}}</td>
-                <td style="text-align:center;" class={{colorclass}}>{{tokencode}}/{{currency}}</td> 
-                <td style="text-align:center;" class={{colorclass}}>{{currentvalue}} {{currency}}</td>           
-                <td style="text-align:center;" class={{colorclass}}> {{min}} </td>
-                <td style="text-align:center;" class={{colorclass}}> {{max}} </td>    
-                <td style="text-align:center;"  >
+            <tr class="trdata_{{colorclass}}" style="text-align:center;padding:6px" >            
+                <td style="padding:6px;" class={{colorclass}} >{{tokencode}} - {{#each tokenlist}} {{tokenname}} {{/each}}</td>
+                <td style="padding:6px;" class={{colorclass}}>{{tokencode}}/{{currency}}</td> 
+                <td style="padding:6px;" class={{colorclass}}>{{currentvalue}} {{currency}}</td>           
+                <td style="padding:6px;" class={{colorclass}}> {{min}} </td>
+                <td style="padding:6px;" class={{colorclass}}> {{max}} </td>    
+                <td style="padding:6px;"  >
                     <a href='/edit/{{_id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a> </td>
                 <td style="text-align:center;">  <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>       
-            
-                
-                </td>                 
+                            
+                </td>                        
             </tr>
             {{/each}}
         </tbody>
-        
+ 
+
     </table>
 </div>
 
-<script type='text/javascript'>
-    audioNotification();
-    function audioNotification()
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script type='text/javascript'>   
+    audioNotification({{user.isMute}});    
+    function audioNotification(isMute)
     {
+        if(isMute)
+        return;
+        
         let myTable=document.getElementById("sampleTable");
         let tbRows=myTable.getElementsByTagName("tr");
         let audioNotificationForGreen = new Audio('./sound/jackpot.mp3');
@@ -69,16 +82,17 @@
             }
             else if(tbRows[i].className == "trdata_red"){
                 setTimeout(function(){
-                   // alert("trdata_red "+(i));
+                  //  alert("trdata_red "+(i));
                     audioNotificationForRed.play();
                     }, 4000 * interval)
             }
 
             interval++;
         }
-    }
-setTimeout("location.reload();",30000);
+    }  
+    setTimeout("location.reload();",30000);
 </script>
+
 <style>
     tr:nth-child(even) {background-color: black;}
     .green{background-color:green; animation-duration:6000ms; animation-name: blink; animation-iteration-count:infinite; animation-direction: alternate }

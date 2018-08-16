@@ -6,7 +6,7 @@
 <table class="table table-hover table-bordered" id="sampleTable">
     <input type="hidden"  name='id'  value=' {{#each data}}  {{_id}}  {{/each}}'>
     <thead >
-        <tr >
+        <tr style="text-align:center;padding:6px">
           
         <th>Token Code</th>
         <th>Token Name</th>
@@ -17,9 +17,9 @@
     </thead>
     <tbody >
         {{#each data}}               
-        <tr>            
-            <td>{{tokencode}}</td>
-            <td>{{tokenname}} </td>            
+        <tr style="text-align:center;padding:6px">            
+            <td  style="padding:6px;">{{tokencode}}</td>
+            <td  style="padding:6px;">{{tokenname}} </td>            
             <td>
                  <a href='Edittokenlist/{{id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></td> 
              <td> <a href='/deleted/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>

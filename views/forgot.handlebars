@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Login</title>
+  </head>
+  <body>
+    <section class="material-half-bg">
+      <div class="cover"></div>
+    </section>
+    <section class="login-content">
+      <div class="logo">
+      </div>
+      <div class="login-box" style="min-height:301px">
+        <form class="login-form" form="form1" action="/users/forgot" method="POST" onSubmit="return validateEmail()">
+          <h4 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Forgot Password</h4>
+          <div class="form-group">
+            <label class="control-label">Email</label>
+            <input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off" id="email"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{1,3}$"  required autofocus>
+          </div>
+         
+          
+          <div class="form-group btn-container">
+            <button type="submit" class="btn btn-primary btn-block" name="login" type="submit"  ><i class="fa fa-sign-in fa-lg fa-fw"></i>Reset Password</button>
+          </div>
+           <div class="form-group btn-container" style="margin-top: 16px">
+           <a href="login"><u>SignIn</u> </a>
+           
+          </div>
+        </form>
+      </div>
+    </section>
+    <!-- Essential javascripts for application to work-->
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="/js/plugins/pace.min.js"></script>
+    <script type="text/javascript">
+      // Login Page Flipbox control
+      $('.login-content [data-toggle="flip"]').click(function() {
+      	$('.login-box').toggleClass('flipped');
+      	return false;
+      });   
+
+      function validateEmail(){
+            var email = document.forms["form1"]["email"].value;
+            var regex = /^([0-9a-zA-Z]([-_\\.]*[0-9a-zA-Z]+)*)@([0-9a-zA-Z]([-_\\.]*[0-9a-zA-Z]+)*)[\\.]([a-zA-Z]{2,9})$/;
+
+            if(!regex.test(email)){
+                alert("Enter a valid email");
+                return false;
+                }
+        }      
+    </script>
+  
+  </body>
+</html>

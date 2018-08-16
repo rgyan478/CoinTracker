@@ -1,17 +1,17 @@
 var request = require('request');
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
-var Token = require('../models/token');
-var CToken=require('../models/tokenlist');
-var Utility = require('../models/utility');
-var flash = require('connect-flash');
-var query=CToken.find();
+    express = require('express');
+    router = express.Router();
+    User = require('../models/user');
+    Token = require('../models/token');
+    CToken=require('../models/tokenlist');
+    Utility = require('../models/utility');
+    flash = require('connect-flash');
+    query=CToken.find();
 
 /* GET home page. */
-router.get('/', ensureAuthenticated, function(req, res) {
+router.get('/', ensureAuthenticated, function(req, res) {  
   
-  var isAdmin=req.user.isAdmin;
+  var isAdmin=req.user.isAdmin; 
   try
   {    
     if(isAdmin == true)//
@@ -63,7 +63,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
 });  
 
       
-    function ensureAuthenticated(req, res, next)
+ function ensureAuthenticated(req, res, next)
       {
               if(req.isAuthenticated())
               {
@@ -80,7 +80,9 @@ router.get('/', ensureAuthenticated, function(req, res) {
 router.get('/createtoken', ensureAuthenticated, function(req, res){ 
   try
   { 
-      CToken.find(function(err, content) 
+    var sortTokenName={tokenname:1};
+    var condtionalQuery=CToken.find().sort(sortTokenName);
+      CToken.find(condtionalQuery,function(err, content) 
       { 
         res.render('createtoken', {  data:content});
         });
@@ -149,6 +151,7 @@ router.post('/createtoken', function (req, res) {
   var currentvalue=0.00000;
   var lastvalue=0.00000;  
   var colorclass=Utility.getColor(min, max, currentvalue);  
+ 
 	//validation
 	req.checkBody('currency', 'Currency is required').notEmpty();
 	req.checkBody('min', 'Min value is required').notEmpty();
@@ -160,8 +163,7 @@ router.post('/createtoken', function (req, res) {
 		});
 	}
   else
-  {    
-    
+  {  
      //Get Current price 
       Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
       currentvalue=currentValues[currency];
@@ -176,6 +178,7 @@ router.post('/createtoken', function (req, res) {
         currentvalue:currentvalue,
         lastvalue:lastvalue,
         colorclass:colorclass
+        
       });        
        //method start for add token
        try
@@ -189,11 +192,9 @@ router.post('/createtoken', function (req, res) {
               res.redirect('/createtoken');  
             }
             else
-            {
-              
+            {              
               Token.createToken(newToken, function(err, token){
-                if(err) throw err;
-              // console.log(token);
+                if(err) throw err;            
               });  
               res.redirect('/');
             }});
@@ -402,4 +403,26 @@ router.get('/Edittokenlist/:id', function(req, res) {
 
 });
 //----------------------------------------End---------------------------------------//
+//Mute sound
+router.post('/mutevolume',function(req,res){
+   var isMute=req.user.isMute; 
+   var getUserId=req.user._id;
+   if(isMute==true)
+   {
+    newValues = { $set: {isMute:0}};
+   }
+   else
+   {
+    newValues = { $set: {isMute:1}};
+   }
+    
+   var  conditionQuerys = {_id:getUserId};
+   User.updateToken(conditionQuerys,newValues,function(err,res){
+    if (err) throw err;
+              console.log("Update volume");
+   });
+
+   res.redirect('/'); 
+});
+
 module.exports = router;

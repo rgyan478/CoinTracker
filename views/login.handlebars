@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+     {{!-- <link rel="icon" href="../images/download.PNG" type="image/PNG" sizes="16x16"> --}}
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="/css/main.css">
     <!-- Font-icon css-->
@@ -29,15 +30,17 @@
             <input class="form-control" type="password" placeholder="Password" required name="password" id="password">
           </div>
            <div class="form-group">
+           
             <input type="checkbox" name="remember_me" id="remember_me">
-            <label  >Remember me</label>
+            <label  >Remember me <img src="../public/images/download.png" alt=""></label>
 
           </div>
           <div class="form-group btn-container">
             <button type="submit" class="btn btn-primary btn-block" name="login" type="submit" ><i class="fa fa-sign-in fa-lg fa-fw"></i>SIGN IN</button>
           </div>
            <div class="form-group btn-container" style="margin-top: 16px">
-           <a href="register"><u>Not a member? &nbsp; Sign up</u> </a>
+           <a href="register"><u>SignUp</u> </a>||
+            <a href="forgot"><u>Forgot Password</u> </a>
           </div>
         </form>
       </div>
