@@ -29,22 +29,13 @@
     "mongoose": "*",
     "mongoose-unique-validator": "^2.0.1",
     "node-cron": "^1.2.1",
-<<<<<<< HEAD
     "nodemailer": "^4.6.8",
-=======
-    "nodemailer": "^4.6.7",
->>>>>>> c0ae3e86f31d7b487686aa0aafc819445feaf92a
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
     "passport-remember-me": "0.0.1",
     "play-sound": "^1.1.2",
     "request": "^2.87.0",
-<<<<<<< HEAD
-=======
-    "script-manager": "^0.7.1",
-    "sweetalert": "^2.1.0",
->>>>>>> c0ae3e86f31d7b487686aa0aafc819445feaf92a
     "trim": "0.0.1",
     "xoauth2": "^1.2.0"
   },
