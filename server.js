@@ -153,7 +153,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
          // console.log("colorname",color);
           if(priviousColor == 'green')
           {
-            console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             tokenmax=currentPrice;
             //console.log('PreviousColor:'+priviousColor);
             

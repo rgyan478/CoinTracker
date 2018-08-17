@@ -307,19 +307,20 @@ router.post('/reset/:token',function(req,res){
 		},
 		function(user, done) {
 		  var smtpTransport = nodemailer.createTransport( {
-			service: 'Gmail',
-			secure: false,
-			auth: {			
-				  user: 'cryptomoontracker@gmail.com',
-				  pass: 'cryptomoontracker@123'			
-			},
+				host: 'mail.gandi.net',
+				port:465,
+				secure: true,
+				auth: {			
+						user: 'admin@cryptomoontracker.com',
+						pass: 'NVArjZzVSiBR2RWFxs7Xb8PFREUot3hRLwbvttKBR'			
+				},
 			tls: {
 			  rejectUnauthorized: false
 			}
 		  });
 		  var mailOptions = {
 			to: user.email,
-			from: 'crypromoontracker@gmail.com',
+			from: 'admin@cryptomoontracker.com',
 			subject: 'Your password has been changed',
 			text: 'Hello,\n\n' +
 			  'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
