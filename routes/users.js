@@ -155,7 +155,9 @@ router.post('/forgot', function(req, res, next) {
 			done(err, token, user);
 		  });
 		});
-	  },
+		},
+		
+		
 	  function(token, user, done) {
 		var smtpTransport = nodemailer.createTransport({
 			host: 'mail.gandi.net',
@@ -257,4 +259,69 @@ router.post('/reset/:token',function(req,res){
 });
 /************************* */
 
+  router.get('/reset/:token',function(req,res){
+	User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+		if (!user) {
+		  req.flash('error','Password reset token is invalid or has expired.');
+		  return res.redirect('/users/login');
+		}
+		res.render('reset', {
+		  user: req.user
+		});
+	  });
+	
+});
+//Update Password and send email conformation
+router.post('/reset/:token',function(req,res){
+	async.waterfall([
+		function(done) {
+		  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+			if (!user) {
+			  req.flash('error_msg', 'Password reset token is invalid or has expired.');
+			 return res.render('login');
+			 //return res.redirect('/users/login');
+			}				
+			user.password = req.body.password;
+			user.resetPasswordToken = undefined;
+			user.resetPasswordExpires = undefined;
+	
+			User.createPassword(user,function(err) {
+			  req.logIn(user, function(err) {
+				done(err, user);
+				
+			  });
+			});
+		  });
+		},
+		function(user, done) {
+		  var smtpTransport = nodemailer.createTransport( {
+			service: 'Gmail',
+			secure: false,
+			auth: {			
+				  user: 'cryptomoontracker@gmail.com',
+				  pass: 'cryptomoontracker@123'			
+			},
+			tls: {
+			  rejectUnauthorized: false
+			}
+		  });
+		  var mailOptions = {
+			to: user.email,
+			from: 'crypromoontracker@gmail.com',
+			subject: 'Your password has been changed',
+			text: 'Hello,\n\n' +
+			  'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+		  };
+		  smtpTransport.sendMail(mailOptions, function(err) {
+			req.flash('error_msg', 'Success! Your password has been changed.');
+			done(err);
+		 	
+		  });
+		}
+	  ], function(err) {
+		res.render('login');
+	  });
+	
+
+});
 module.exports = router;

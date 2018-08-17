@@ -160,7 +160,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
           }
           else if(priviousColor == 'red')
           {
-            console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             tokenmin=currentPrice;
             //console.log('PreviousColor:'+priviousColor);
             
@@ -193,5 +193,3 @@ app.set('port', (process.env.PORT || 8080));
 app.listen(app.get('port'), function(){
 	console.log('Server started on port '+app.get('port'));
 });
-
-

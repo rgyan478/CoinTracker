@@ -11,11 +11,14 @@
   "license": "ISC",
   "dependencies": {
     "alert-node": "^1.2.1",
+    "async": "^2.6.1",
     "bcryptjs": "*",
     "body-parser": "*",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "cron": "^1.3.0",
+    "crypto": "^1.0.1",
+    "document": "^0.4.7",
     "express": "*",
     "express-handlebars": "*",
     "express-messages": "*",
@@ -26,13 +29,22 @@
     "mongoose": "*",
     "mongoose-unique-validator": "^2.0.1",
     "node-cron": "^1.2.1",
+<<<<<<< HEAD
     "nodemailer": "^4.6.8",
+=======
+    "nodemailer": "^4.6.7",
+>>>>>>> c0ae3e86f31d7b487686aa0aafc819445feaf92a
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
     "passport-remember-me": "0.0.1",
     "play-sound": "^1.1.2",
     "request": "^2.87.0",
+<<<<<<< HEAD
+=======
+    "script-manager": "^0.7.1",
+    "sweetalert": "^2.1.0",
+>>>>>>> c0ae3e86f31d7b487686aa0aafc819445feaf92a
     "trim": "0.0.1",
     "xoauth2": "^1.2.0"
   },

@@ -25,7 +25,7 @@ var TokenSchema = mongoose.Schema({
         type:Number
     },
     colorclass:{
-        type:String,
+        type:String
       
     }
   
