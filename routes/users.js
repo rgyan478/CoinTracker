@@ -50,25 +50,37 @@ router.post('/register', function (req, res) {
 	}
 	else{
 		var newUser = new User({
-			//name: name,
-			email: email,
-			username: username,
-			password: password,
-			isMute:false
+				//name: name,
+				email: email,
+				username: username,
+				password: password
 
 		});
+								
+			 User.FindToUsername({username:username},function(err,tokencodes){
+				 if(err) throw err
+				 if(tokencodes.length > 0 )
+				 {
+				
+					 req.flash('error_msg','The user name ' + username +  ' already registered.');
+					 res.redirect('/users/register');
+				 }
+				 else
+				 {
+					
+						User.createUser(newUser, function(err, user){
 
-		User.createUser(newUser, function(err, user){
-
-			if(err) throw err;
-			//console.log(user);
+										if(err) throw err;
+										console.log(user);
+								});
+				
+								req.flash('success_msg', 'You are registered and can now login');
+				
+								res.redirect('/users/login');
+				 }
+				});
+			}
 		});
-
-		req.flash('success_msg', 'You are registered and can now login');
-
-		res.redirect('/users/login');
-	}
-})
 
 passport.use(new LocalStrategy(function(username, password, done){
 	User.getUserByUsername(username, function(err, user){

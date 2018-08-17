@@ -65,3 +65,8 @@ module.exports.createPassword = function(user, callback){
 module.exports.updateToken = function(conditionQuery, newValues, callback){
     User.updateMany(conditionQuery, newValues, callback);
  }
+
+ 
+ module.exports.FindToUsername=function(conditionQuery,callback){
+    User.find(conditionQuery,callback)
+ }
