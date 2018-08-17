@@ -55,14 +55,12 @@ router.post('/register', function (req, res) {
 				username: username,
 				password: password
 
-		});
-								
-			 User.FindToUsername({username:username},function(err,tokencodes){
+		});								
+		User.FindToUsername({$or:[{username:username},{email:email}]},function(err,tokencodes){
 				 if(err) throw err
 				 if(tokencodes.length > 0 )
-				 {
-				
-					 req.flash('error_msg','The user name ' + username +  ' already registered.');
+				 {				
+					 req.flash('error_msg','The username/email already registered.');
 					 res.redirect('/users/register');
 				 }
 				 else
