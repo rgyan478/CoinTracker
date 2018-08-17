@@ -11,12 +11,12 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');    
 var config=require('./models/config');         
 var MongoClient = require('mongodb').MongoClient;
-//mongoose.connect('mongodb://localhost/CurrencyTracker');
+mongoose.connect(config.ServerConnectionURL);
 
 //server connection
- mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
+//mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
+//mongoose.connect('mongodb://localhost:27017/crypto_moon_tracker');
 var db = mongoose.connection;
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var Token = require('./models/token');
@@ -98,6 +98,7 @@ var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
 cron.schedule('*/15 * * * * *', function(){
   console.log('Update currency value every 20 second.');
+ 
 //Server connection Url "ServerConnectionURL"
 //Local connection Url "LocalConnectionURL"
 var conditionQuery;
@@ -108,7 +109,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
  {
-   
+  // console.log("total",result);
     if (err) throw err;   
       
     //loop for get unique value from array
@@ -130,24 +131,51 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
     result.forEach(element => {  
 
       var CurrencyValues;
-      //console.log("color",result.colorclass);
+      
       //Get max value
       var tokenmax=element.max;
       var tokenmin=element.min;
+      var priviousColor=element.colorclass;
+      var currency=element.currency;
+      //console.log('PreviousColor:'+priviousColor);
       Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
         for(var currencyItem in currentValues)
         {       
-          //console.log("chekc",currentValues[currencyItem])
+          if(currency !=currencyItem)
+            continue;
+
+          //console.log("cureencycode",currencyItem);
+          //console.log("tokencode",element.tokencode);
           conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
           //Get Color 
           var currentPrice=currentValues[currencyItem];
           var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
+         // console.log("colorname",color);
+          if(priviousColor == 'green')
+          {
+            console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            tokenmax=currentPrice;
+            //console.log('PreviousColor:'+priviousColor);
+            
+          }
+          else if(priviousColor == 'red')
+          {
+            console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            tokenmin=currentPrice;
+            //console.log('PreviousColor:'+priviousColor);
+            
+          }
           //console.log(color);       
-          newValues = { $set: { currentvalue:currentPrice,lastvalue:element.currentvalue,colorclass:color}}; 
+          newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
 
           Token.updateToken(conditionQuery, newValues, function(err, res) {
             if (err) throw err;
-            // console.log("Currency  updated");
+
+            if(res.nModified == 1)
+            {
+              //console.log(res);
+            //  console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            }
     
           });
         
@@ -161,7 +189,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
 });//End Connection
 });//End Cron
 // Set Port
-app.set('port', (process.env.PORT || 3000));
+app.set('port', (process.env.PORT || 8080));
 app.listen(app.get('port'), function(){
 	console.log('Server started on port '+app.get('port'));
 });

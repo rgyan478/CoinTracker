@@ -1,100 +1,141 @@
 var request = require('request');
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
-var Token = require('../models/token');
-var CToken=require('../models/tokenlist');
-var Utility = require('../models/utility');
-var flash = require('connect-flash');
-var query=CToken.find();
+    express = require('express');
+    router = express.Router();
+    User = require('../models/user');
+    Token = require('../models/token');
+    CToken=require('../models/tokenlist');
+    Utility = require('../models/utility');
+    flash = require('connect-flash');
+    query=CToken.find();
 
 /* GET home page. */
-router.get('/', ensureAuthenticated, function(req, res) {
+router.get('/', ensureAuthenticated, function(req, res) {  
+  
+  var isAdmin=req.user.isAdmin; 
   try
-  {
-    var userid= req.user._id;
-    Token.find({userid:userid},function(err, content) { 
-        res.render('index', {  data:content });
-      });
-  }
-  catch(error )
   {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
+    if(isAdmin == true)//
+    {
+          Token.aggregate([
+            {
+                  $lookup:
+                        {
+                          from:'tokenlists',
+                          localField:'tokencode',
+                          foreignField:'tokencode',
+                          as:'tokenlist'
+                        }
+            }
+            
+        ],function(err, content) { 
+            res.render('index',{ data:content });         
+          });
+   }
+   else
+   {
+    var userId= req.user._id;   
+              Token.aggregate([
+                {
+                      $lookup:
+                            {
+                              from:'tokenlists',
+                              localField:'tokencode',
+                              foreignField:'tokencode',
+                              as:'tokenlist'
+                            }
+                },
+                {
+                
+                  $match:{userid:userId.toString()}     
+                }  
+               
+            ],function(err, content) { 
+                res.render('index',{ data:content });                                
+              });
+      }
+     }    
+      catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
 
-  });  
-function ensureAuthenticated(req, res, next)
-{
-  if(req.isAuthenticated())
-  {
-    return next();
-  }
-  else
-  {
-    req.flash('error_msg','You are not logged in.');
-    res.redirect('/users/login');
-  }
-}
+});  
 
-// Get Create Token
+      
+ function ensureAuthenticated(req, res, next)
+      {
+              if(req.isAuthenticated())
+              {
+                return next();
+              }
+              else
+              {
+                req.flash('error_msg','You are not logged in.');
+                res.redirect('/users/login');
+              }
+      }
+
+    // Get Create Token
 router.get('/createtoken', ensureAuthenticated, function(req, res){ 
   try
   { 
-     CToken.find(function(err, content) 
-     { 
-      res.render('createtoken', {  data:content});
-      });
-  }
-  catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
-});
+    var sortTokenName={tokenname:1};
+    var condtionalQuery=CToken.find().sort(sortTokenName);
+      CToken.find(condtionalQuery,function(err, content) 
+      { 
+        res.render('createtoken', {  data:content});
+        });
+    }
+      catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
+  });
 
 
 // Get view tokenlist TokenList
 router.get('/admintokenview', ensureAuthenticated, function(req, res){
-try
-{
-  CToken.find(function(err, content) 
-  { 
-   res.render('admintokenview', {  data:content });
-  });
-}
-catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
+    try
+    {
+      CToken.find(function(err, content) 
+      { 
+      res.render('admintokenview', {  data:content });
+      });
+    }
+    catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
  
 });
 
 //Get Create Tokenlist
 router.get('/createtokenlist', ensureAuthenticated, function(req, res){
-  try
-  {
-    res.render('createtokenlist');
-  }
-  catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
- 
+      try
+      {
+        res.render('createtokenlist');
+      }
+      catch(error )
+      {    
+        req.flash('error_msg',error.toString());
+        res.redirect('error');
+      }
+    
 });
 // Get Cancle TokenList
 router.get('/', ensureAuthenticated, function(req, res){
-  try
-  {
-    res.render('index');
-  }
-	catch(error )
-  {    
-    req.flash('error_msg',error.toString());
-    res.redirect('error');
-  }
+    try
+    {
+      res.render('index');
+    }
+    catch(error )
+    {    
+      req.flash('error_msg',error.toString());
+      res.redirect('error');
+    }
 });
 router.get('/error', ensureAuthenticated, function(req, res){
 	res.render('error');
@@ -110,6 +151,7 @@ router.post('/createtoken', function (req, res) {
   var currentvalue=0.00000;
   var lastvalue=0.00000;  
   var colorclass=Utility.getColor(min, max, currentvalue);  
+ 
 	//validation
 	req.checkBody('currency', 'Currency is required').notEmpty();
 	req.checkBody('min', 'Min value is required').notEmpty();
@@ -121,10 +163,9 @@ router.post('/createtoken', function (req, res) {
 		});
 	}
   else
-  {    
-    
+  {  
      //Get Current price 
-    Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
+      Utility.getCurrentPriceByAPI(tokencode, currency, function(currentValues){
       currentvalue=currentValues[currency];
       lastvalue=currentvalue;
       var colorclass=Utility.getColor(min, max, currentvalue);
@@ -137,10 +178,11 @@ router.post('/createtoken', function (req, res) {
         currentvalue:currentvalue,
         lastvalue:lastvalue,
         colorclass:colorclass
+        
       });        
        //method start for add token
        try
-       {
+       {              
           Token.FindTokencode({userid:userid,currency:currency,tokencode:tokencode},function(err,tokencodes){
             if(err) throw err        
             if(tokencodes.length > 0 )
@@ -150,20 +192,20 @@ router.post('/createtoken', function (req, res) {
               res.redirect('/createtoken');  
             }
             else
-            {
-              
+            {              
               Token.createToken(newToken, function(err, token){
-                if(err) throw err;
-              // console.log(token);
+                if(err) throw err;            
               });  
               res.redirect('/');
             }});
-      }
+          }
+      
       catch(error)
       {
         req.flash('error_msg',error.toString());
         res.redirect('error');
       }
+    
     });//End utility
   
 } 
@@ -361,4 +403,26 @@ router.get('/Edittokenlist/:id', function(req, res) {
 
 });
 //----------------------------------------End---------------------------------------//
+//Mute sound
+router.post('/mutevolume',function(req,res){
+   var isMute=req.user.isMute; 
+   var getUserId=req.user._id;
+   if(isMute==true)
+   {
+    newValues = { $set: {isMute:0}};
+   }
+   else
+   {
+    newValues = { $set: {isMute:1}};
+   }
+    
+   var  conditionQuerys = {_id:getUserId};
+   User.updateToken(conditionQuerys,newValues,function(err,res){
+    if (err) throw err;
+              console.log("Update volume");
+   });
+
+   res.redirect('/'); 
+});
+
 module.exports = router;

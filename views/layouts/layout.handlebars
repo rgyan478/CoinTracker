@@ -4,14 +4,16 @@
     <meta name="description" content="Crypto Moon Tracker">
     <!-- Twitter meta-->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:site" content="@pratikborsadiya">
-    <meta property="twitter:creator" content="@pratikborsadiya">
+    <meta property="twitter:site" content="@CryptoMoonTracker">
+    <meta property="twitter:creator" content="@CryptoMoonTracker">
+    {{!-- <link rel="icon" href="#"><img src="images/download.png" ></link> --}}
+     <link rel="icon" href="../images/download.PNG" type="image/PNG" sizes="32x32">
     <!-- Open Graph Meta-->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Crypto Moon Tracker">
     <meta property="og:title" content="Crypto Moon Tracker">
-    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
-    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
+    <meta property="og:url" content="../../public/images/cryptomoontracker.png">
+    <meta property="og:image" content="../../public/images/cryptomoontracker.png">
     <meta property="og:description" content="Crypto Moon Tracker">
     <title>Crypto Moon Tracker</title>
     <meta charset="utf-8">
@@ -22,20 +24,27 @@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
-  <body class="app sidebar-mini rtl">
+    
+  <body class="app sidebar-mini rtl sidenav-toggled">
 
     {{#if user}}
       <!-- Navbar-->
       <header class="app-header">
         {{!-- <a class="app-header__logo" href="/">CryptoMoonTracker</a> --}}
-        <img alt="" src="images/crypto_moon_tracker_logo.png" style="    height: 18px; margin-top: 14px"/>
-        <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+      
+        <img alt="" src="images/crypto_moon_tracker_logo.png" style=" height: 18px; margin-top: 14px"/>
+        <!-- Sidebar toggle button-->
+     {{#if user.isAdmin}}
+       <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+       {{/if}}
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
           <li style="display:none;" class="app-search">
             <input class="app-search__input" type="search" placeholder="Search">
             <button class="app-search__button"><i class="fa fa-search"></i></button>
+            
           </li>
+        
           <!--Notification Menu-->
           <li class="dropdown" style="display:none;"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>
             <ul class="app-notification dropdown-menu dropdown-menu-right">
@@ -80,13 +89,20 @@
           <!-- User Menu-->
           <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
             <ul class="dropdown-menu settings-menu dropdown-menu-right">
+              
               <li><a class="dropdown-item" href="/users/logout"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+             
+                 {{!-- <p style="margin-left: 23px;"><input type="checkbox" name="volumemute"   id="volumemute">&nbsp;&nbsp;&nbsp;Mute Volume</p> --}}
+                
             </ul>
           </li>
         </ul>
       </header>
+       <aside class="app-sidebar" style="background-color:black;"></aside>
+           {{#if user.isAdmin}}
       <!-- Sidebar menu-->
       <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+     
       <aside class="app-sidebar">
         <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="#" alt="">
           <div>
@@ -96,7 +112,7 @@
         </div>
         <ul class="app-menu">
           <li><a class="app-menu__item" href="/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
-          {{#if user.isAdmin}}
+       
             <li><a id="admintokenview" class="app-menu__item" href="/admintokenview"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">View TokenList</span></a></li>
             <li><a id="createtokenlist" class="app-menu__item" href="/createtokenlist"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Add New TokenList</span></a></li>
           {{/if}}
@@ -108,7 +124,7 @@
           <div class="col-md-12">
             <div class="tile">
               <div class="tile-body">
-                {{{body}}}
+                {{{body}}}               
               </div>
             </div>
           </div>
@@ -143,7 +159,7 @@
     <script type="text/javascript">$('#sampleTable').DataTable();</script>
     <!-- Google analytics script-->
     <script type="text/javascript">
-      if(document.location.hostname == 'pratikborsadiya.in') {
+      if(document.location.hostname == 'cryptomoontracker.com') {
       	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

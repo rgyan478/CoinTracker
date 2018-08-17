@@ -15,7 +15,13 @@ var UserSchema = mongoose.Schema({
     },
     isAdmin:{
         type:Boolean
-    }
+    },
+    isMute:{
+        type:Boolean
+    },
+    resetPasswordToken:{type:String} ,
+    resetPasswordExpires: Date
+  
    
 });
 
@@ -48,3 +54,14 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
         callback(null, isMatch);
     });
 }
+module.exports.createPassword = function(user, callback){
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            user.password= hash;
+            user.save(callback);
+        });
+    });
+}
+module.exports.updateToken = function(conditionQuery, newValues, callback){
+    User.updateMany(conditionQuery, newValues, callback);
+ }

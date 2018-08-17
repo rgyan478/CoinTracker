@@ -2,10 +2,10 @@
   "name": "currencytracker",
   "version": "1.0.0",
   "description": "currency tracker with authentication process",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "heroku-prebuild": "npm install",
-    "start":"node app.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -26,17 +26,18 @@
     "mongoose": "*",
     "mongoose-unique-validator": "^2.0.1",
     "node-cron": "^1.2.1",
+    "nodemailer": "^4.6.8",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
     "passport-remember-me": "0.0.1",
     "play-sound": "^1.1.2",
     "request": "^2.87.0",
-    "trim": "0.0.1"
+    "trim": "0.0.1",
+    "xoauth2": "^1.2.0"
   },
   "engines": {
     "node": "9.5.0",
     "npm": "5.7.1"
-  } 
-
+  }
 }
