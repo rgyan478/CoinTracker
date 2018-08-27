@@ -1,4 +1,4 @@
-   <div class="row">
+   <div class="row paddingTL">
         <div class="col-md-6">
           <div class="tile">
             <h3 class="tile-title">Token</h3>
@@ -21,11 +21,8 @@
              <div class="form-group row">
                   <label class="control-label col-md-3">Currency</label>
                   <div class="col-md-7">
-                   <select name="currency"  class="form-control col-md-8">
-                         
-                          <option value="{{data.currency}}">{{data.currency}}</option>
-                          
-                         
+                   <select name="currency"  class="form-control col-md-8">                         
+                       <option value="{{data.currency}}">{{data.currency}}</option> 
                     </select>
                   </div>
                 </div>
@@ -44,7 +41,8 @@
                 <div class="tile-footer">
                   <div class="row">
                     <div class="col-md-8 col-md-offset-3">
-                      <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/"><i class="fa fa-fw fa-lg fa-check-circle"></i>Cancel</a>
+                      <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update</button>
+                      <a class="btn btn-secondary" href="/"><i class="fa fa-fw fa-lg fa-check-circle"></i>Cancel</a>
                     </div>
                   </div>
                 </div>
