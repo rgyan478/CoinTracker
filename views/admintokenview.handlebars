@@ -1,9 +1,7 @@
-<div class="row" style="float:right">
-    <a class="btn btn-secondar" href="/createtokenlist"><i class="fa fa-fw fa-lg fa-circle"></i>Add New TokenList</a>
-</div>
+<div><br></div>
 <form id="form1" action="/update" method="POST">
 
-<table class="table" id="sampleTable">
+<table class="table table-striped table-sm" id="sampleTable">
     <input type="hidden"  name='id'  value=' {{#each data}}  {{_id}}  {{/each}}'>
     <thead >
         <tr style="text-align:center;padding:6px">
@@ -27,3 +25,25 @@
      </tbody>     
   </table> 
 </form>
+ <script>
+        //Search token details base on pair/token
+function myFunction() 
+{
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("sampleTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+    tr[i].style.display = "";
+    } else {
+    tr[i].style.display = "none";
+    }
+    }       
+    }
+    
+}
+   </script>

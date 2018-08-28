@@ -25,7 +25,8 @@ router.get('/', ensureAuthenticated, function(req, res) {
                           foreignField:'tokencode',
                           as:'tokenlist'
                         }
-            }
+            },
+            {$sort:{tokencode:1}}
             
         ],function(err, content) { 
             res.render('index',{ data:content });         
@@ -48,6 +49,8 @@ router.get('/', ensureAuthenticated, function(req, res) {
                 
                   $match:{userid:userId.toString()}     
                 }  
+                ,
+                {$sort:{tokencode:1}}
                
             ],function(err, content) { 
                 res.render('index',{ data:content });                                

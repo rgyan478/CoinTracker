@@ -1,22 +1,12 @@
 <div class="row right-add-token" style="float:right">
  <div class="search-box-div">
-     <strong>Search:</strong> 
-     <input type="text" name="search" autocomplete="off"  id="myInput" onkeyup="myFunction()">
+     {{!-- <strong>Search:</strong>  --}}
+     {{!-- <input type="text" name="search"  autocomplete="off"  id="myInput" onkeyup="myFunction()"> --}}
     </div>
    
-    <a href="" onclick="window.location.reload()">         
-         <i class="fa fa-refresh fa-2x" style="margin-top: 24px;font-size:24px;" aria-hidden="true"></i>
-    </a>
-    <a class="btn btn-secondar" href="/createtoken" style="margin-top:15px;"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Coin</a>
-    <form id="form1" action="/mutevolume" method="POST">
-        <a class="btn btn-secondar"  style="margin-top:15px;">
-         {{#if user.isMute}}
-            <input type="image" id="volume"  name="volumenable" src="../images/volenable.png" title="Unmute" height="22px" width="22px"  >
-        {{else}}
-            <input type="image"  id="volumedisable" src="../images/volumedisable.png" title="Mute"  height="22px" width="22px" style="display:display">
-        {{/if}}
-        </a>
-    </form>    
+    
+    {{!-- <a class="btn btn-secondar" href="/createtoken" style="margin-top:15px;"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Token</a> --}}
+  
 </div>
 
   

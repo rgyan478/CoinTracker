@@ -33,19 +33,58 @@
                  
               {{!-- <div class="brand-text brand-big visible text-uppercase"><strong style="color:#e50000">CRYPTO</strong><strong style="color:#35f0358a">MONO</strong><strong style="color:#ffff">TRACKER</strong></div> --}}
               <div class="brand-text brand-sm"><strong style="color:#e50000">C</strong><strong style="color:#35f0358a">M</strong><strong style="color:#ffff">T</strong></div>
-            <img class="brand-text brand-big visible" alt="" src="/images/crypto_moon_tracker_logo.png" style=" height: 18px;"/>
+               <div class="brand-text brand-big visible"><strong style="color:#e50000">CRYPTO</strong><strong style="color:#35f0358a">MOON</strong><strong style="color:#ffff">TRACKER</strong></div>
+            {{!-- <img class="brand-text brand-big visible" alt="" src="/images/crypto_moon_tracker_logo.png" style=" height: 18px;"/> --}}
             </a>
             <!-- Sidebar Toggle Btn-->
             {{#if user.isAdmin}}
             <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
             {{/if}}
           </div>
-          <div class="right-menu list-inline no-margin-bottom">    
+          <div class="right-menu list-inline no-margin-bottom">  
              
-            <!-- Log out -->
-            <div class="list-inline-item logout"> 
+            <!-- Search Box -->
+              <div class="list-inline-item logout">   
+                   <div class="search-box-div">   
+               <strong>Search:</strong> 
+               <input type="text" name="search" autocomplete="off"  id="myInput" onkeyup="myFunction()">
+               </div>  
+            </div>
+            <!--End-->
+            <!--Create token menu-->
+              <div class="list-inline-item logout">    
+                        
+                <a class="btn btn-secondar" href="/createtoken" ><i class="fa fa-fw fa-lg fa-circle"></i>Add New Token</a>
+            </div>
+            <!--End-->
+            <!--Refersh-->
+            <div class="list-inline-item logout">    
+                        
+              <a href="" onclick="window.location.reload()">         
+               <i class="fa fa-refresh fa-1x" aria-hidden="true" title="Refresh"></i>
+            </a>
+            </div>
+            <!--End-->
+            <!--Sound icon mute and Unmute-->
+             <div class="list-inline-item logout">    
+                        
+                <form id="form1" action="/mutevolume" method="POST">
+              <a class="btn btn-secondar"  style="margin-top:15px;">
+              {{#if user.isMute}}
+                  <input type="image" id="volume"  name="volumenable" src="../images/volenable.ICO" title="Unmute" height="22px" width="22px"  >
+              {{else}}
+                  <input type="image"  id="volumedisable" src="../images/volumedisable.ICO" title="Mute"  height="22px" width="22px" style="display:display">
+              {{/if}}
+              </a>
+          </form>    
+            </div>
+            <!--End-->
+             <!-- Log out -->
+              <div class="list-inline-item logout">    
+                        
                 <a id="logout" href="/users/logout" class="nav-link">Logout <i class="icon-logout"></i></a>
             </div>
+             <!--End Log out -->
           </div>
         </div>
       </nav>
@@ -71,22 +110,34 @@
         </ul>    
        
       </nav>
-      <!-- Sidebar Navigation end-->    
-      <div class="page-content "> 
-    {{/if}} 
-    
-    <div class="page-content " style="width:100%"> 
-        <div class="page-container">
-          <div class="col-md-12">
-            <div class="tile">
-              <div class="tile-body">
-                {{{body}}}               
-              </div>
-            </div>
-          </div>
-        </div>      
-      </div>
-    </div>
+     <!-- Sidebar Navigation end-->
+     <div class="page-content ">
+   {{/if}}
+
+   <div class="page-content " style="width:100%">
+       <div class="page-container">
+         <div class="col-md-12">
+           <div class="tile">
+             <div class="tile-body">
+               {{{body}}}
+             </div>
+           </div>
+         </div>
+       </div>
+           </div>
+            {{#if user.isAdmin}}
+             {{else}}
+             <!--Footer-->
+         <footer class="footer">
+         <div class="footer__block block no-margin-bottom">
+           <div class="container-fluid text-center">
+           <p class="no-margin-bottom">Price information  provided by Cryptocompare API <a href="https://www.cryptocompare.com/api">Cryptocompare API</a>.</p>
+           </div>
+         </div>
+       </footer>
+            {{/if}}
+
+   </div>
      {{else}}
       {{#if success_msg}}
         <div class="alert alert-success">{{success_msg}}</div>

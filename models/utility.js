@@ -14,7 +14,7 @@ module.exports.getColor = function(min, max, current){
 module.exports.getCurrentPriceByAPI = function(token, currencyList, callback){
     var CurrencyValues;
     request(
-        'https://min-api.cryptocompare.com/data/price?fsym=' + token + '&tsyms='+currencyList,
+        'https://min-api.cryptocompare.com/data/price?fsym=' + token + '&tsyms='+currencyList + '&extraParams=cryptomoontracker',
         { json: true }, 
         (err, res, body) => 
         {

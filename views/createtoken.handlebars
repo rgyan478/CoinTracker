@@ -2,7 +2,7 @@
         <div class="col-md-6">
           <div class="tile">
             <div>
-              <h3 class="tile-title">Token</h3>
+              <h3 class="tile-title">Add New Token</h3>
               {{#if error_msg}}
                 <div class="alert alert-danger">{{error_msg}}</div>
               {{/if}}
@@ -13,7 +13,7 @@
               <form class="form-horizontal" method="POST" action="/createtoken">
               <div class="form-group row">
              
-                  <label class="control-label col-md-3">TokenName</label>
+                  <label class="control-label col-md-3">Token</label>
                   <div class="col-md-7">
                    {{!-- <select name="tokencode"  class="form-control col-md-8" id="drptokencode" onchange="getTokenListName()"> --}}
                        <select name="tokencode"  class="form-control col-md-8" >
