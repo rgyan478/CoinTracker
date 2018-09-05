@@ -1,11 +1,7 @@
-<div class="row right-add-token" style="float:right">
- <div class="search-box-div"> 
-    </div>  
-</div>  
 <script src="/js/jquery-3.2.1.min.js"></script>
   <div class="table-responsive"> 
-    <table class="table table-striped table-sm" id="sampleTable">
-        <br>
+    <table class="table table-striped table-sm" id="sampleTable" style="width:100% !important;">
+        <br/>
         <thead>
             <tr  style="text-align:center;">
                 <th>Token</th>
@@ -37,7 +33,7 @@ $(document).ready(function(){
         cache: false,
         success: function (content) {   
          //clear datatable
-        $('#sampleTable').DataTable().clear();
+        //$('#sampleTable').DataTable().clear();
 
         //destroy datatable
         $('#sampleTable').DataTable().destroy();  

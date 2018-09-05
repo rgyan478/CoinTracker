@@ -12,10 +12,6 @@ var mongoose = require('mongoose');
 var config=require('./models/config');         
 var MongoClient = require('mongodb').MongoClient;
 mongoose.connect(config.ServerConnectionURL);
-
-//server connection
-//mongoose.connect('mongodb://rgyan:rgyan123@ds245901.mlab.com:45901/currencytracker');
-//mongoose.connect('mongodb://localhost:27017/crypto_moon_tracker');
 var db = mongoose.connection;
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -108,8 +104,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
  var dbo = db.db("currencytracker");
  var array=[]; 
  dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
- {
-  // console.log("total",result);
+ {  
     if (err) throw err;   
       
     //loop for get unique value from array
@@ -136,32 +131,24 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
       var tokenmax=element.max;
       var tokenmin=element.min;
       var priviousColor=element.colorclass;
-      var currency=element.currency;
-      //console.log('PreviousColor:'+priviousColor);
+      var currency=element.currency;     
       Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
         for(var currencyItem in currentValues)
         {       
           if(currency !=currencyItem)
-            continue;
-          //console.log("cureencycode",currencyItem);
-          //console.log("tokencode",element.tokencode);
+            continue;         
           conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
           //Get Color 
           var currentPrice=currentValues[currencyItem];
-          var color=Utility.getColor(tokenmin, tokenmax, currentPrice); 
-         // console.log("colorname",color);
+          var color=Utility.getColor(tokenmin, tokenmax, currentPrice);        
           if(priviousColor=='green' && color =='green')
-          {
-            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
-            tokenmax=currentPrice;
-           // console.log('PreviousColor:'+priviousColor);
+          {           
+            tokenmax=currentPrice;         
             
           }
           else if(priviousColor == 'red' && color =='red')
-          {
-            //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
-            tokenmin=currentPrice;
-            //console.log('PreviousColor:'+priviousColor);
+          {            
+            tokenmin=currentPrice;          
             
           }
           else if(priviousColor=='black' && color =='black')
@@ -170,8 +157,6 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
             tokenmax=element.max;
             tokenmin=element.min;
           }
-          
-          //console.log(color);       
           newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
 
           Token.updateToken(conditionQuery, newValues, function(err, res) {
@@ -179,8 +164,7 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
 
             if(res.nModified == 1)
             {
-              //console.log(res);
-            //  console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
+            
             }
     
           });
