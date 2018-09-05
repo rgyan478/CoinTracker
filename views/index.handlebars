@@ -57,7 +57,7 @@ $(document).ready(function(){
                                                         { data: "max"  },                      
                                                         {
                                                             mRender: function (data, type, row) {
-                                                                return '<a href=/edit/'+row._id+'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edit"></i></a>   <a href=/delete/'+row._id+'  ><i class="fa fa-trash fa-2x" aria-hidden="true" title="Delete"></i></a>'
+                                                                return '<a href=/edit/'+row._id+'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edit"></i></a>   <a href=/delete/'+row._id+' onclick=" return RemoveCurrencyList();" ><i class="fa fa-trash fa-2x" aria-hidden="true" title="Delete"></i></a>'
                                                             }
                                                         }                        
                                                     ],
@@ -73,7 +73,7 @@ $(document).ready(function(){
                 },        
                     error: function (msg)
                      {            
-                        alert(msg.responseText);
+                        console.log(msg.responseText);
                      }
             });
     }
@@ -102,6 +102,18 @@ $(document).ready(function(){
             }
             
         }
+//Delete record alert message.
+function RemoveCurrencyList() 
+{          
+        if (confirm("Are you sure you want to delete?") == true) 
+        {
+            return true;
+        } 
+        else 
+        {
+            return false;
+        }
+}
    </script>
 <script src="/admin/vendor/jquery/jquery.min.js"></script>
 
