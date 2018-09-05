@@ -2818,7 +2818,7 @@ STYLE SWITCHER FOR DEMO
  */
 body {
   font-family: "Muli", sans-serif;
-  font-size: 1rem;
+  font-size: 1rem ;
   font-weight: 400;
   line-height: 1.5;
   color: #8a8d93;
@@ -2956,7 +2956,7 @@ a.text-primary:focus, a.text-primary:hover {
 /*
  * 4. PAGINATION
  */
-.page-item:first-child .page-link {
+/* .page-item:first-child .page-link {
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
 }
@@ -2964,15 +2964,15 @@ a.text-primary:focus, a.text-primary:hover {
 .page-item:last-child .page-link {
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
-}
+} */
 
-.page-item.active .page-link {
+/* .page-item.active .page-link {
   color: #fff;
   background-color: #DB6574;
   border-color: #DB6574;
-}
+} */
 
-.page-item.disabled .page-link {
+/* .page-item.disabled .page-link {
   color: #868e96;
   background-color: #22252a;
   border-color: #8a8d93;
@@ -3032,7 +3032,7 @@ a.text-primary:focus, a.text-primary:hover {
 .pagination-sm .page-item:last-child .page-link {
   border-top-right-radius: 0.2rem;
   border-bottom-right-radius: 0.2rem;
-}
+} */
 
 /*
 * 5. UTILITIES
@@ -3551,3 +3551,16 @@ pre code {
     padding: 50px 0 0 0;
   }
 }
+.refresh-font{ font-size: 21px;
+  position: relative;
+  top: 4px;}
+  .volenable-icons{
+    position: relative;
+    top:-2px;
+    width: 20px;
+  }
+  .icon-logout{
+    font-size: 20px;
+    position: relative;
+    top: 3px;
+  }

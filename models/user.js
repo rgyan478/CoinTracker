@@ -18,7 +18,7 @@ var UserSchema = mongoose.Schema({
     },
     isMute:{
         type:Boolean
-    },
+    },    
     resetPasswordToken:{type:String} ,
     resetPasswordExpires: Date
   

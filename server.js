@@ -96,7 +96,7 @@ app.use('/users', users);
 // //6 star for running task every second and 5 star for running task every minutes
 var cron = require('node-cron');
  //Start Cron-Every 20 sECOND
-cron.schedule('*/15 * * * * *', function(){
+cron.schedule('*/20 * * * * *', function(){
   console.log('Update currency value every 20 second.');
  
 //Server connection Url "ServerConnectionURL"
@@ -143,28 +143,34 @@ MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , func
         {       
           if(currency !=currencyItem)
             continue;
-
           //console.log("cureencycode",currencyItem);
           //console.log("tokencode",element.tokencode);
           conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
           //Get Color 
           var currentPrice=currentValues[currencyItem];
-          var color=Utility.getColor(tokenmin, tokenmax, currentPrice) 
+          var color=Utility.getColor(tokenmin, tokenmax, currentPrice); 
          // console.log("colorname",color);
-          if(priviousColor == 'green')
+          if(priviousColor=='green' && color =='green')
           {
             //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             tokenmax=currentPrice;
-            //console.log('PreviousColor:'+priviousColor);
+           // console.log('PreviousColor:'+priviousColor);
             
           }
-          else if(priviousColor == 'red')
+          else if(priviousColor == 'red' && color =='red')
           {
             //console.log('Color:'+ color +' Min:' + tokenmin +' Max: '+tokenmax +' Current Price: '+currentPrice);
             tokenmin=currentPrice;
             //console.log('PreviousColor:'+priviousColor);
             
           }
+          else if(priviousColor=='black' && color =='black')
+          {
+          
+            tokenmax=element.max;
+            tokenmin=element.min;
+          }
+          
           //console.log(color);       
           newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
 

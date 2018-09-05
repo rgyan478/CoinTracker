@@ -1,15 +1,8 @@
 <div class="row right-add-token" style="float:right">
- <div class="search-box-div">
-     {{!-- <strong>Search:</strong>  --}}
-     {{!-- <input type="text" name="search"  autocomplete="off"  id="myInput" onkeyup="myFunction()"> --}}
-    </div>
-   
-    
-    {{!-- <a class="btn btn-secondar" href="/createtoken" style="margin-top:15px;"><i class="fa fa-fw fa-lg fa-circle"></i>Add New Token</a> --}}
-  
-</div>
-
-  
+ <div class="search-box-div"> 
+    </div>  
+</div>  
+<script src="/js/jquery-3.2.1.min.js"></script>
   <div class="table-responsive"> 
     <table class="table table-striped table-sm" id="sampleTable">
         <br>
@@ -23,78 +16,126 @@
                 <th>Action</th> 
           </tr>
         </thead>
-        <tbody>
-            {{#each data}}               
-            <tr class="trdata_{{colorclass}}" style="text-align:center;" >            
-                <td  class={{colorclass}}> {{tokencode}} - {{#each tokenlist}} {{tokenname}} {{/each}}</td>
-                <td  class={{colorclass}}> {{tokencode}}/{{currency}}</td> 
-                <td  class={{colorclass}}> {{currentvalue}} {{currency}}</td>           
-                <td  class={{colorclass}}> {{min}} </td>
-                <td  class={{colorclass}}> {{max}} </td>    
-                <td class="last-child">
-                      <a href='/edit/{{_id}}'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
-                      <a href='/delete/{{_id}}' onclick='return confirm("Are you sure you want to delete?")'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>       
-               </td>                        
-            </tr>
-            {{/each}}
+        <tbody  style="text-align:center;">
+            
         </tbody> 
     </table>
    </div> 
-   <script>
-        //Search token details base on pair/token
-function myFunction() 
-{
-    var input, filter, table, tr, td, i;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("sampleTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-    tr[i].style.display = "";
-    } else {
-    tr[i].style.display = "none";
-    }
-    }       
+<script  type="text/javascript">
+$(document).ready(function(){   
+    GetTokenList();
+    setInterval(GetTokenList, 6000); //Set time interval
+    function GetTokenList(){
+    jQuery.support.cors = true;
+    $.ajax(
+    { 
+        type: "GET",
+        url: '/tokenlist',
+        data: "{}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        success: function (content) {   
+         //clear datatable
+        $('#sampleTable').DataTable().clear();
+
+        //destroy datatable
+        $('#sampleTable').DataTable().destroy();  
+        $('#sampleTable').DataTable({         
+                                        data:content,
+                                        "columns": [
+                                                        { data: null , 
+                                                            render : function ( data, type, full ) { 
+                                                            return data.tokencode +'-'+ data.tokenlist[0].tokenname;}
+                                                        },   
+                                                        { data: null , 
+                                                            render : function ( data, type, full ) { 
+                                                            return data.tokencode +'/'+ data.currency;}
+                                                        },                             
+                                                        { data:"currentvalue"},
+                                                        { data: "min"  },
+                                                        { data: "max"  },                      
+                                                        {
+                                                            mRender: function (data, type, row) {
+                                                                return '<a href=/edit/'+row._id+'><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" title="Edit"></i></a>   <a href=/delete/'+row._id+'  ><i class="fa fa-trash fa-2x" aria-hidden="true" title="Delete"></i></a>'
+                                                            }
+                                                        }                        
+                                                    ],
+                                    "createdRow": function( nRow, data, dataIndex )
+                                    {
+                                            $('td', nRow).addClass(data["colorclass"]);            
+                                    },
+                                    "drawCallback": function( settings ) {
+                                                        audioNotification({{user.isMute}}); 
+                                                    }
+                   
+                                    } );       
+                },        
+                    error: function (msg)
+                     {            
+                        alert(msg.responseText);
+                     }
+            });
     }
     
-}
+});
+
+</script>
+   <script>
+        //Search token details base on pair/token
+        function myFunction() 
+        {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("sampleTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            } else {
+            tr[i].style.display = "none";
+            }
+            }       
+            }
+            
+        }
    </script>
 <script src="/admin/vendor/jquery/jquery.min.js"></script>
-<script type='text/javascript'> 
-   
-    audioNotification({{user.isMute}});    
-    function audioNotification(isMute)
-    {
-      
+
+<script > 
+function audioNotification(isMute)
+    {      
+       
         if(isMute)
-        return;
-        
-        let myTable=document.getElementById("sampleTable");
-        let tbRows=myTable.getElementsByTagName("tr");
+        return;       
+        var tbRows, table; 
+        table = document.getElementById("sampleTable");
+        tbRows = table.getElementsByTagName("tr");
         let audioNotificationForGreen = new Audio('./sound/jackpot.mp3');
         let audioNotificationForRed = new Audio('./sound/bell.mp3');
         let interval=1;
-        for(let i=0; i < tbRows.length; i++)
+        for(let i=1; i < tbRows.length; i++)
             {
-                    if(tbRows[i].className == "trdata_black")
+              
+                    if(tbRows[i].cells[0].className == "black sorting_1")                  
                     {
                     continue;
                     }
                 
-                if(tbRows[i].className == "trdata_green")
-                    {
-                        setTimeout(function(){
-                    // alert("trdata_green "+(i));
-                        audioNotificationForGreen.play();
-                        }, 4000 * interval)
-                    }
-                else if(tbRows[i].className == "trdata_red")
+                if(tbRows[i].cells[0].className == "green sorting_1")
                     {
                     setTimeout(function(){
-                    //  alert("trdata_red "+(i));
+                    // alert("trdata_green "+(i));
+                     audioNotificationForGreen.play();
+                        }, 4000 * interval)
+                    }
+                else if(tbRows[i].cells[0].className == "red sorting_1")
+                    {
+                    setTimeout(function(){
+                     //alert("trdata_red "+(i));
                         audioNotificationForRed.play();
                         }, 4000 * interval)
                     }
@@ -102,7 +143,7 @@ function myFunction()
                 interval++;
             }
     }  
-setTimeout("location.reload();",12000);  
+
 
   </script>
 

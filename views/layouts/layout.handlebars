@@ -54,14 +54,14 @@
             <!--Create token menu-->
               <div class="list-inline-item logout">    
                         
-                <a class="btn btn-secondar" href="/createtoken" ><i class="fa fa-fw fa-lg fa-circle"></i>Add New Token</a>
+                <a class="btn btn-secondar" href="/createtoken" ><i class="fa fa-fw fa-lg fa-circle"></i><strong> Add Token</strong> </a>
             </div>
             <!--End-->
             <!--Refersh-->
             <div class="list-inline-item logout">    
                         
               <a href="" onclick="window.location.reload()">         
-               <i class="fa fa-refresh fa-1x" aria-hidden="true" title="Refresh"></i>
+               <i class="fa fa-refresh fa-1x refresh-font" aria-hidden="true" title="Refresh"></i>
             </a>
             </div>
             <!--End-->
@@ -71,9 +71,9 @@
                 <form id="form1" action="/mutevolume" method="POST">
               <a class="btn btn-secondar"  style="margin-top:15px;">
               {{#if user.isMute}}
-                  <input type="image" id="volume"  name="volumenable" src="../images/volenable.ico" title="Unmute" height="22px" width="22px"  >
+                  <input type="image" id="volume" class="volenable-icons"  name="volumenable" src="../images/volenable.ico" title="Unmute" > 
               {{else}}
-                  <input type="image"  id="volumedisable" src="../images/volumedisable.ico" title="Mute"  height="22px" width="22px" style="display:display">
+                  <input type="image"  id="volumedisable" class="volenable-icons" src="../images/volumedisable.ico" title="Mute" style="display:display">
               {{/if}}
               </a>
           </form>    
@@ -82,7 +82,7 @@
              <!-- Log out -->
               <div class="list-inline-item logout">    
                         
-                <a id="logout" href="/users/logout" class="nav-link">Logout <i class="icon-logout"></i></a>
+                <a id="logout" href="/users/logout" class="nav-link"> <strong>Logout </strong>  <i class="icon-logout"></i></a>
             </div>
              <!--End Log out -->
           </div>
@@ -131,7 +131,7 @@
          <footer class="footer">
          <div class="footer__block block no-margin-bottom">
            <div class="container-fluid text-center">
-           <p class="no-margin-bottom">Price information  provided by Cryptocompare API <a href="https://www.cryptocompare.com/api">Cryptocompare API</a>.</p>
+           <p class="no-margin-bottom">Price information  provided by <a href="https://www.cryptocompare.com/api" target=" ">Cryptocompare API</a>.</p>
            </div>
          </div>
        </footer>
@@ -157,9 +157,22 @@
     <script src="/admin/vendor/popper.js/umd/popper.min.js"> </script>
     <script src="/admin/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="/admin/vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="/admin/vendor/chart.js/Chart.min.js"></script>
+    {{!-- <script src="/admin/vendor/chart.js/Chart.min.js"></script> --}}
     <script src="/admin/vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="/admin/js/charts-home.js"></script>
+    {{!-- <script src="/admin/js/charts-home.js"></script> --}}
     <script src="/admin/js/front.js"></script>
+    <!-- Essential javascripts for application to work-->
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="/js/plugins/pace.min.js"></script>
+    
+    <!-- Page specific javascripts-->
+    <!-- Data table plugin-->
+    <script type="text/javascript" src="/js/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/js/plugins/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
   </body>
 </html>

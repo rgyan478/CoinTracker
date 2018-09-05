@@ -7,9 +7,13 @@ var request = require('request');
     Utility = require('../models/utility');
     flash = require('connect-flash');
     query=CToken.find();
-
+  
+router.get('/', ensureAuthenticated, function(req, res){
+  res.render('index');
+});
+    
 /* GET home page. */
-router.get('/', ensureAuthenticated, function(req, res) {  
+router.get('/tokenlist', ensureAuthenticated, function(req, res) {  
   
   var isAdmin=req.user.isAdmin; 
   try
@@ -29,7 +33,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
             {$sort:{tokencode:1}}
             
         ],function(err, content) { 
-            res.render('index',{ data:content });         
+          res.send(content);           
           });
    }
    else
@@ -53,7 +57,7 @@ router.get('/', ensureAuthenticated, function(req, res) {
                 {$sort:{tokencode:1}}
                
             ],function(err, content) { 
-                res.render('index',{ data:content });                                
+              res.send(content);                              
               });
       }
      }    
@@ -347,7 +351,8 @@ router.post('/edit', function (req, res) {
 router.get('/deleted/:id', function(req, res) { 
   var db = req.db; 
   var uid = req.params.id.toString();    
-    var conditionQuery = {_id:uid };    
+    var conditionQuery = {_id:uid }; 
+    if(confirm('Are You sure') )  {
     try
     {
           CToken.deleteToken(conditionQuery, function(err, res) {
@@ -361,7 +366,10 @@ router.get('/deleted/:id', function(req, res) {
           req.flash('error_msg',error.toString());
           res.redirect('error');
       }
+    }
+    else{
 
+    }
 });
 //------------------Edit TokenList---------------------------------------------------------//
 router.post('/updatetokenlist', function (req, res) {  

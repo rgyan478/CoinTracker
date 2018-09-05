@@ -3,11 +3,12 @@ var express = require('express');
 	passport = require('passport');
 	LocalStrategy = require('passport-local').Strategy;
 	User = require('../models/user');
-	 async = require('async');
-	 crypto = require('crypto');
-	 nodemailer = require('nodemailer');
-	 xoauth2 = require('xoauth2');
-	 bcrypt = require('bcryptjs');
+	async = require('async');
+	crypto = require('crypto');
+	nodemailer = require('nodemailer');
+	xoauth2 = require('xoauth2');
+	bcrypt = require('bcryptjs');
+
 // Register
 router.get('/register', function (req, res) {
 	res.render('register');
@@ -31,55 +32,58 @@ router.get('/login', function (req, res) {
 
 // Register User
 router.post('/register', function (req, res) {
+
 	//var name = req.body.name;
 	var username=req.body.username;
 		email=req.body.email;
 		password=req.body.password;
 		password2= req.body.password2;
-
 	//validation
 	req.checkBody('username', 'Username is required').notEmpty();	
 	req.checkBody('password', 'Password is required').notEmpty();
 	req.checkBody('password2', 'Password do not match').equals(req.body.password);
 	var errors=req.validationErrors();
-
+ 
 	if(errors){
 		res.render('register', {
 			errors:errors
 		});
 	}
 	else{
+		 secretToken=crypto.randomBytes(64).toString('hex');
+		 	
 		var newUser = new User({
 				//name: name,
 				email: email,
 				username: username,
-				password: password
-
+				password: password,
+				secretToken:secretToken ,
+			//	secretTokenExpires:Date.now() + 900 ,// 15 min,
+			//	active: false
 		});								
 		User.FindToUsername({$or:[{username:username},{email:email}]},function(err,tokencodes){
-				 if(err) throw err
-				 if(tokencodes.length > 0 )
-				 {				
-					 req.flash('error_msg','The username/email already registered.');
-					 res.redirect('/users/register');
-				 }
-				 else
-				 {
-					
-						User.createUser(newUser, function(err, user){
-
-										if(err) throw err;
-										console.log(user);
-								});
-				
-								req.flash('success_msg', 'You are registered and can now login');
-				
-								res.redirect('/users/login');
-				 }
-				});
+			if(err) throw err
+			if(tokencodes.length > 0 )
+			{				
+				req.flash('error_msg','The username/email already registered.');
+				res.redirect('/users/register');
 			}
-		});
+			else
+			{
+			 
+				 User.createUser(newUser, function(err, user){
 
+								 if(err) throw err;
+								 console.log(user);
+						 });
+		 
+						 req.flash('success_msg', 'You are registered and can now login');
+		 
+						 res.redirect('/users/login');
+			}
+		 });
+	 }
+ });
 passport.use(new LocalStrategy(function(username, password, done){
 	User.getUserByUsername(username, function(err, user){
 		if(err) 
@@ -92,7 +96,7 @@ passport.use(new LocalStrategy(function(username, password, done){
 		{
 			return done(null, false, {message: 'Unknown User'});
 		}
-
+		
 		User.comparePassword(password, user.password, function(err, isMatch)
 		{
 			if(err) throw err;
