@@ -31,14 +31,16 @@
             <!-- Navbar Header-->
             <a href="/" class="navbar-brand cstm-navbar-brand">
                  
-             
-              <div class="brand-text brand-sm"><strong style="color:#e50000">C</strong><strong style="color:#35f0358a">M</strong><strong style="color:#ffff">T</strong></div>
-               <div class="brand-text brand-big visible"><strong style="color:#e50000">CRYPTO</strong><strong style="color:#35f0358a">MOON</strong><strong style="color:#ffff">TRACKER</strong></div>
-           
+              {{#if user.isAdmin}}
+              <div class="brand-text brand-sm visible"><strong style="color:#e50000">C</strong><strong style="color:#35f0358a">M</strong><strong style="color:#ffff">T</strong></div>
+               <div class="brand-text brand-big "><strong style="color:#e50000">CRYPTO</strong><strong style="color:#35f0358a">MOON</strong><strong style="color:#ffff">TRACKER</strong></div>
+             {{else}}
+             <div class="brand-text brand-big visible"><strong style="color:#e50000">CRYPTO</strong><strong style="color:#35f0358a">MOON</strong><strong style="color:#ffff">TRACKER</strong></div>
+             {{/if}}
             </a>
             <!-- Sidebar Toggle Btn-->
             {{#if user.isAdmin}}
-            <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
+            <button class="sidebar-toggle active"><i class="fa fa-long-arrow-right"></i></button>
             {{/if}}
           </div>
           <div class="right-menu list-inline no-margin-bottom">  
@@ -92,7 +94,7 @@
     <div class="d-flex align-items-stretch">
         {{#if user.isAdmin}}
       <!-- Sidebar Navigation-->
-      <nav id="sidebar" >
+      <nav id="sidebar" class="shrinked" >
         <!-- Sidebar Header--> 
          <div class="sidebar-header d-flex align-items-center">
        
@@ -111,7 +113,7 @@
        
       </nav>
      <!-- Sidebar Navigation end-->
-     <div class="page-content ">
+     {{!-- <div class="page-content "> --}}
    {{/if}}
 
    <div class="page-content " style="width:100%">
