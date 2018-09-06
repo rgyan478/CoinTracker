@@ -7,19 +7,20 @@ var expressValidator = require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');    
 var config=require('./models/config');         
 var MongoClient = require('mongodb').MongoClient;
-mongoose.connect(config.ServerConnectionURL);
-var db = mongoose.connection;
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var Token = require('./models/token');
 var Utility = require('./models/utility');
+var cron = require('node-cron');
+
+//Connection 
+mongoose.connect(config.ServerConnectionURL);
+
 // Init App
 var app = express();
-
 var cron = require('node-cron');
 
 // View Engine
@@ -74,109 +75,103 @@ app.use(expressValidator({
 // Connect Flash
 app.use(flash());
 
+//Route
+app.use('/', routes);
+app.use('/users', users); 
+
 // Global Vars
 app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
-  res.locals.user = req.user || null;
-  
-  //  Create an Predefiend array of CurrencyList
+  res.locals.user = req.user || null;  
   res.locals.currencylistarray=["BTC","ETH","LTC","USDT","BNB","USD","CAD","EUR","GBP","AUD","JPY","CNY","KRW","VND"]; 
-
   next();
 });
-app.use('/', routes);
-app.use('/users', users); 
-//cron
-// //6 star for running task every second and 5 star for running task every minutes
-var cron = require('node-cron');
- //Start Cron-Every 20 sECOND
-cron.schedule('*/20 * * * * *', function(){
-  console.log('Update currency value every 20 second.');
- 
-//Server connection Url "ServerConnectionURL"
-//Local connection Url "LocalConnectionURL"
-var conditionQuery;
-var newValues;
-MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
- if (err) throw err;
- var dbo = db.db("currencytracker");
- var array=[]; 
- dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
- {  
-    if (err) throw err;   
-      
-    //loop for get unique value from array
-    for(var i=0;i<=result.length;i++)
-    {
-    for(var j=i+1;j<=result.length;j++)
-      {
-        if(result[i]==result[j])
-        {
-            delete result[j];
-        }
-        else
-        {
-              continue;
-        }
-      }
-    }
-   
-    result.forEach(element => {  
-
-      var CurrencyValues;
-      
-      //Get max value
-      var tokenmax=element.max;
-      var tokenmin=element.min;
-      var priviousColor=element.colorclass;
-      var currency=element.currency;     
-      Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
-        for(var currencyItem in currentValues)
-        {       
-          if(currency !=currencyItem)
-            continue;         
-          conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
-          //Get Color 
-          var currentPrice=currentValues[currencyItem];
-          var color=Utility.getColor(tokenmin, tokenmax, currentPrice);        
-          if(priviousColor=='green' && color =='green')
-          {           
-            tokenmax=currentPrice;         
-            
-          }
-          else if(priviousColor == 'red' && color =='red')
-          {            
-            tokenmin=currentPrice;          
-            
-          }
-          else if(priviousColor=='black' && color =='black')
-          {
+//Start Cron-Every 20 sECOND
+cron.schedule('*/20 * * * * *', function()
+{
+    console.log('Update currency value every 20 second.');
+    var conditionQuery;
+    var newValues;
+    MongoClient.connect(config.ServerConnectionURL, { useNewUrlParser: true } , function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("currencytracker");
+    var array=[]; 
+    dbo.collection("tokens").find({},{_id :0,tokencode:1}).toArray(function(err, result) 
+    {  
+        if (err) throw err;   
           
-            tokenmax=element.max;
-            tokenmin=element.min;
-          }
-          newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
-
-          Token.updateToken(conditionQuery, newValues, function(err, res) {
-            if (err) throw err;
-
-            if(res.nModified == 1)
+        //loop for get unique value from array
+        for(var i=0;i<=result.length;i++)
+        {
+        for(var j=i+1;j<=result.length;j++)
+          {
+            if(result[i]==result[j])
             {
-            
+                delete result[j];
             }
-    
+            else
+            {
+                  continue;
+            }
+          }
+        }
+      
+        result.forEach(element => {  
+
+          var CurrencyValues;
+          
+          //Get max value
+          var tokenmax=element.max;
+          var tokenmin=element.min;
+          var priviousColor=element.colorclass;
+          var currency=element.currency;     
+          Utility.getCurrentPriceByAPI(element.tokencode,config.CurrencyApiCode, function(currentValues){        
+            for(var currencyItem in currentValues)
+            {       
+              if(currency !=currencyItem)
+                continue;         
+              conditionQuery = {_id: element._id, tokencode: element.tokencode, currency:currencyItem};
+              //Get Color 
+              var currentPrice=currentValues[currencyItem];
+              var color=Utility.getColor(tokenmin, tokenmax, currentPrice);        
+              if(priviousColor=='green' && color =='green')
+              {           
+                tokenmax=currentPrice;         
+                
+              }
+              else if(priviousColor == 'red' && color =='red')
+              {            
+                tokenmin=currentPrice;          
+                
+              }
+              else if(priviousColor=='black' && color =='black')
+              {
+              
+                tokenmax=element.max;
+                tokenmin=element.min;
+              }
+              newValues = { $set: { currentvalue:currentPrice, lastvalue:element.currentvalue, min:tokenmin, max:tokenmax, colorclass:color}}; 
+
+              Token.updateToken(conditionQuery, newValues, function(err, res) {
+                if (err) throw err;
+
+                if(res.nModified == 1)
+                {
+                
+                }
+        
+              });
+            
+            } 
           });
         
-        } 
-      });
-     
-    });       
-    
-    db.close();
- });
-});//End Connection
+        });       
+        
+        db.close();
+    });
+    });//End Connection
 });//End Cron
 // Set Port
 app.set('port', (process.env.PORT || 8080));
